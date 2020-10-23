@@ -1,0 +1,146 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+
+
+public class SceneControl_Manger : MonoBehaviour
+{
+    private bool part_control = true ;
+    
+    private Move_stuff_01 move_Stuff_01;
+
+    //====機關按住滑動
+    private bool mouse1 = false;//滑鼠點第一下
+    private float mouse1durtime = 0;
+    private float mouse1default = 1f;
+    
+    //====蘑菇障礙物，點擊二下
+    private bool mouse2 = false;//滑鼠點第一下
+    private bool mouse3 = false;//滑鼠點第二下
+    private float mouse2durtime = 0f;
+    private float mouse2default = 0.3f;
+    //====判斷Alice的優先程度
+    private bool alice_active1 = false;
+    private bool alice_actice2 = false;
+
+
+    RaycastHit hit;
+
+    public GameObject mushroom_obstacle;
+    private Obstacle a;
+    public Alice_Manger alice_manger;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        mouse1durtime = mouse1default;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        mousecontrol();
+        mushroom_obstacle_tmiecontrol();
+        //Alicecontrol();
+    }
+
+    public void mousecontrol()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            Ray r = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(r, out hit))
+            {
+                if (hit.transform.CompareTag("Move_Obj"))
+                {
+                    Debug.Log("a");
+                    mouse1durtime -= Time.deltaTime;
+                    Debug.Log("b");
+                    if (mouse1durtime < 0)//這邊判斷要按住才算
+                    {
+                        Debug.Log("c");
+                        mouse1 = true;//層級放反了，如果是Down這要連點很多下才會完成-=的條件
+
+                        if (mouse1 == true)
+                        {
+                            Debug.Log("d");
+                            MoveTarget mvTarget = hit.transform.GetComponent<MoveTarget>();
+                            if (mvTarget != null)
+                            {
+                                Debug.Log("e");
+                                move_Stuff_01 = mvTarget.MoveObj.GetComponent<Move_stuff_01>();
+                                move_Stuff_01.Move_stuff(hit.transform.gameObject);
+                                alice_active1 = false;
+                            }
+                        }
+
+                    }
+                    //停止控制Alice. 
+                    //存滑鼠點到的物件
+                }
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (hit.transform.CompareTag("Mushroom_Obstacle"))//蘑菇障礙物
+                    {
+                        if (!mouse2) //if括號裡面的東西是運算子(包含!)，然後if判斷裡面的運算子算完後，是true才能進去，是false就不能進去
+                        {
+                            mouse2 = true;//這邊的mouse2 = ture跟上面的ture計算無關
+                            mouse3 = false;
+                            mouse2durtime = mouse2default;
+                        }
+                        else if (mouse2durtime > 0)
+                        {
+                            mouse3 = true;
+                        }
+                        if (mouse2durtime > 0 && mouse2 == true && mouse3 == true)//限制條件
+                        {
+                            a = hit.transform.gameObject.GetComponent<Obstacle>();
+                            if (a != null)
+                            {
+                                mushroom_obstacle = hit.transform.gameObject;//射線打到磨菇要用變數存起來
+                                a.obstacleOff();
+                                alice_actice2 = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            if (move_Stuff_01)
+            {
+                move_Stuff_01.Move_stuff(null);//機關儲存的value要切成null
+                mouse1durtime = mouse1default;//滑鼠只要離開機關計時器就要回默認值
+                mouse1 = false;//滑鼠放開機關就不能動了
+            }
+            alice_active1 = true;
+            alice_actice2 = true;
+        }
+    }
+
+    public void Alicecontrol()
+    {
+        if(alice_active1 ==true && alice_actice2 == true)
+        {
+            
+            //alice_manger.Alice_navmeshlink();
+
+        }
+    }
+   
+    public void mushroom_obstacle_tmiecontrol()
+    {
+        if (mouse2 == true && mouse3==false)
+        {
+            mouse2durtime -= Time.deltaTime;
+            if (mouse2durtime <= 0)
+            {
+                mouse2 = false;
+                mouse3 = false;
+            }
+        }
+        
+    }
+}
