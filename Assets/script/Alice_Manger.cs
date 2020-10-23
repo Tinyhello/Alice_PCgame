@@ -189,14 +189,14 @@ public class Alice_Manger : MonoBehaviour
         anim.SetFloat("MoveVelocity", val);
     }
 
-    private void OnCollisionEnter(Collision ClearItem)//碰到過關道具
-    {
-        if (ClearItem.gameObject.CompareTag("GameItem"))
-        {
+    //private void OnCollisionEnter(Collision ClearItem)//碰到過關道具
+    //{
+    //    if (ClearItem.gameObject.CompareTag("GameItem"))
+    //    {
 
-        }
+    //    }
 
-    }
+    //}
 }
 
 
