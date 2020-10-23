@@ -12,6 +12,9 @@ TagManager:
   - TWall_Left
   - TWall_Right
   - Alice
+  - MoveTry
+  - Mushroom_Obstacle
+  - Move_Obj
   layers:
   - Default
   - TransparentFX
@@ -23,7 +26,7 @@ TagManager:
   - 
   - Player
   - PP
-  - 
+  - house
   - 
   - 
   - 
