@@ -162,8 +162,8 @@ public class Enemy_Manger : MonoBehaviour
             //播放撲克士兵攻擊動畫
             if (CentralDataViewer.PlayerAlive == 1)
             {
+                CentralDataViewer.Player_isBorn = false;
                 CentralDataViewer.Player_isDead = true;
-                //播放愛麗絲死亡動畫
                 AttackTarget.gameObject.SetActive(false);//停用愛麗絲
                 Destroy(AttackTarget.gameObject, 2f);//2秒後消滅愛麗絲 
                 CentralDataViewer.PlayerAlive--;//愛麗絲計數--
