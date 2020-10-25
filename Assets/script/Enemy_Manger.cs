@@ -10,13 +10,11 @@ public class Enemy_Manger : MonoBehaviour
     public GameObject enemy;
     public GameObject Pos1;
     public GameObject Pos2;
+    public GameObject Pos3;
     public Transform Ray;
-    public float enemyduringtime = 3f;
-
-
+    public float enemyduringtime = 0f;
 
     private float Chasetime = 4f;
-
 
     private float viewRadius = 7f;
     private float viewAngleStep = 20f;
@@ -50,23 +48,34 @@ public class Enemy_Manger : MonoBehaviour
         //接觸Alice後Alice要陣亡
         if (isMove) //true
         {
+            Debug.Log("go to isMove");
             if (Vector3.Distance(transform.position, enemy.transform.position) <= navMeshAgent.stoppingDistance)
             {
+                Debug.Log("go to t=s");
                 if (enemy.GetInstanceID() == Pos1.GetInstanceID())
                 {
+                    Debug.Log("go to 2");
                     enemy = Pos2;
                 }
-                else
+                else//if(enemy.GetInstanceID() == Pos2.GetInstanceID())
                 {
+                    Debug.Log(enemy.GetInstanceID());
+                    Debug.Log("go to 3");
                     enemy = Pos1;
                 }
+                //if(enemy.GetInstanceID() == Pos3.GetInstanceID())
+                //{
+                //    Debug.Log("go to 1");
+                //    enemy = Pos1;
+                //}
+
                 isMove = false;
             }
             navMeshAgent.SetDestination(enemy.transform.position);
         }
         else //false
         {
-            if (enemy.GetInstanceID() == Pos1.GetInstanceID() || enemy.GetInstanceID() == Pos2.GetInstanceID())//計時器沒辦法到點後才計算，因為判斷式有成功通過(因為ID已經相等)
+            if (enemy.GetInstanceID() == Pos1.GetInstanceID() || enemy.GetInstanceID() == Pos2.GetInstanceID() || enemy.GetInstanceID() == Pos3.GetInstanceID())//計時器沒辦法到點後才計算，因為判斷式有成功通過(因為ID已經相等)
             {
                 enemyduringtime -= Time.deltaTime;
                 //Debug.Log(duringtime);

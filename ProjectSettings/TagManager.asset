@@ -12,6 +12,10 @@ TagManager:
   - TWall_Left
   - TWall_Right
   - Alice
+  - MoveTry
+  - Mushroom_Obstacle
+  - Move_Obj
+  - ClearItem
   layers:
   - Default
   - TransparentFX
@@ -21,8 +25,8 @@ TagManager:
   - UI
   - 
   - 
-  - Player
-  - PP
+  - House_Plane
+  - 
   - 
   - 
   - 
