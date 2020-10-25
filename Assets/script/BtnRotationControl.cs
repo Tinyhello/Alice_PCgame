@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+<<<<<<< HEAD
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
@@ -64,4 +65,35 @@ public class BtnRotationControl : MonoBehaviour
     //        CameraObj.transform.Rotate(new Vector3(0, 10, 0), -30 * Time.deltaTime);
     //    }
     //}
+=======
+
+public class BtnRotationControl : MonoBehaviour
+{
+    public GameObject CameraObj;
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+    public void Maze_LeftRotation()
+    {
+    if(CameraObj != null)
+        {
+            CameraObj.transform.Rotate(new Vector3(0, 10, 0), 30 * Time.deltaTime);
+        }
+    }
+
+    public void Maze_RightRotation()
+    {
+        if (CameraObj != null)
+        {
+            CameraObj.transform.Rotate(new Vector3(0, 10, 0), -30 * Time.deltaTime);
+        }
+    }
+>>>>>>> 116c5f4e0ef031839a103887efccaa5c6483f4c2
 }
