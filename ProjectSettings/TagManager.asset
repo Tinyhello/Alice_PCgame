@@ -15,10 +15,7 @@ TagManager:
   - MoveTry
   - Mushroom_Obstacle
   - Move_Obj
-<<<<<<< HEAD
   - ClearItem
-=======
->>>>>>> 116c5f4e0ef031839a103887efccaa5c6483f4c2
   layers:
   - Default
   - TransparentFX
@@ -28,15 +25,9 @@ TagManager:
   - UI
   - 
   - 
-<<<<<<< HEAD
   - House_Plane
   - 
   - 
-=======
-  - Player
-  - PP
-  - house
->>>>>>> 116c5f4e0ef031839a103887efccaa5c6483f4c2
   - 
   - 
   - 
