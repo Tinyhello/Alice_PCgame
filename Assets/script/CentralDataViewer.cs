@@ -48,6 +48,7 @@ public class CentralDataViewer : MonoBehaviour
                     WaitRebirthtime = 0.3f;//重設死亡等待時間
                     EnemyObjs[0].transform.position = EnemyResetPos[0].position;//重設小兵1座標
                     EnemyObjs[1].transform.position = EnemyResetPos[1].position;//重設小兵2座標
+                    Item[0].SetActive(false);//重設過關道具
 
                     for (int i = 0; i < 3; i++)
                     {

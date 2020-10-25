@@ -26,10 +26,13 @@ public class SceneControl_Manger : MonoBehaviour
 
 
     RaycastHit hit;
+    public LayerMask mask = 1 << 8; //打開第8層
 
     public GameObject mushroom_obstacle;
     private Obstacle a;
     public Alice_Manger alice_manger;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -50,7 +53,7 @@ public class SceneControl_Manger : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             Ray r = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(r, out hit))
+            if (Physics.Raycast(r, out hit))   //,500f, mask
             {
                 if (hit.transform.CompareTag("Move_Obj"))
                 {
