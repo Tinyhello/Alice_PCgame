@@ -37,7 +37,8 @@ public class Enemy_Manger : MonoBehaviour
         Engage();
         //LookAround(Ray);
 
-        if (Alice != null) { 
+        if (Alice != null) 
+        { 
             GotoALice();
         }
     }
@@ -49,18 +50,24 @@ public class Enemy_Manger : MonoBehaviour
         //接觸Alice後Alice要陣亡
         if (isMove) //true
         {
+            Debug.Log("go to isMove");
             if (Vector3.Distance(transform.position, enemy.transform.position) <= navMeshAgent.stoppingDistance)
             {
+                Debug.Log("go to t=s");
                 if (enemy.GetInstanceID() == Pos1.GetInstanceID())
                 {
+                    Debug.Log("go to 2");
                     enemy = Pos2;
                 }
                 else if(enemy.GetInstanceID() == Pos2.GetInstanceID())
                 {
+                    Debug.Log(enemy.GetInstanceID());
+                    Debug.Log("go to 3");
                     enemy = Pos3;
                 }
                 else if(enemy.GetInstanceID() == Pos3.GetInstanceID())
                 {
+                    Debug.Log("go to 1");
                     enemy = Pos1;
                 }
 

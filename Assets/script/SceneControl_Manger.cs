@@ -11,7 +11,7 @@ public class SceneControl_Manger : MonoBehaviour
     private Move_stuff_01 move_Stuff_01;
 
     //====機關按住滑動
-    private bool mouse1 = false;//滑鼠點第一下
+    private bool mouse1 = true;//滑鼠選第一個
     private float mouse1durtime = 0;
     private float mouse1default = 1f;
     
@@ -22,9 +22,10 @@ public class SceneControl_Manger : MonoBehaviour
     private float mouse2default = 0.3f;
     //====判斷Alice的優先程度
     private bool alice_active1 = false;
-    private bool alice_actice2 = false;
+    private bool alice_active2 = false;
 
-
+    
+    private bool choose1stuff = true; 
     RaycastHit hit;
     public LayerMask mask = 1 << 8; //打開第8層
 
@@ -35,6 +36,7 @@ public class SceneControl_Manger : MonoBehaviour
     //public Renderer HouseRenderer;換材質註解
     //public Material[] HouseMaterials;換材質註解
 
+    private GameObject alice;
     // Start is called before the first frame update
     void Start()
     {
@@ -48,7 +50,7 @@ public class SceneControl_Manger : MonoBehaviour
     {
         mousecontrol();
         mushroom_obstacle_tmiecontrol();
-        //Alicecontrol();
+        Alicecontrol();
     }
 
     public void mousecontrol()
@@ -72,8 +74,6 @@ public class SceneControl_Manger : MonoBehaviour
                     //Debug.Log("b");
                     if (mouse1durtime < 0)//這邊判斷要按住才算
                     {
-                        //Debug.Log("c");
-                        mouse1 = true;//層級放反了，如果是Down這要連點很多下才會完成-=的條件
 
                         if (mouse1 == true)
                         {
@@ -84,6 +84,7 @@ public class SceneControl_Manger : MonoBehaviour
                                 //Debug.Log("e");
                                 move_Stuff_01 = mvTarget.MoveObj.GetComponent<Move_stuff_01>();
                                 move_Stuff_01.Move_stuff(hit.transform.gameObject);
+                                mouse1 = false;
                                 alice_active1 = false;
                             }
                         }
@@ -92,10 +93,11 @@ public class SceneControl_Manger : MonoBehaviour
                     //停止控制Alice. 
                     //存滑鼠點到的物件
                 }
-                if (Input.GetMouseButtonDown(0))
+                else if (Input.GetMouseButtonDown(0))
                 {
                     if (hit.transform.CompareTag("Mushroom_Obstacle"))//蘑菇障礙物
                     {
+                        alice_active2 = false;
                         if (!mouse2) //if括號裡面的東西是運算子(包含!)，然後if判斷裡面的運算子算完後，是true才能進去，是false就不能進去
                         {
                             mouse2 = true;//這邊的mouse2 = ture跟上面的ture計算無關
@@ -113,10 +115,15 @@ public class SceneControl_Manger : MonoBehaviour
                             {
                                 mushroom_obstacle = hit.transform.gameObject;//射線打到磨菇要用變數存起來
                                 a.obstacleOff();
-                                alice_actice2 = false;
+                                
                             }
                         }
                     }
+                }
+                else
+                {
+                    alice_active1 = true;
+                    alice_active2 = true;
                 }
             }
         }
@@ -126,20 +133,26 @@ public class SceneControl_Manger : MonoBehaviour
             {
                 move_Stuff_01.Move_stuff(null);//機關儲存的value要切成null
                 mouse1durtime = mouse1default;//滑鼠只要離開機關計時器就要回默認值
-                mouse1 = false;//滑鼠放開機關就不能動了
+                mouse1 = true;//滑鼠放開機關就不能動了
+                
+
             }
-            alice_active1 = true;
-            alice_actice2 = true;
+            
         }
     }
 
     public void Alicecontrol()
     {
-        if(alice_active1 ==true && alice_actice2 == true)
+
+        if(alice_active1 ==true && alice_active2 == true)
         {
             
-            //alice_manger.Alice_navmeshlink();
-
+            alice = GameObject.FindWithTag("Alice");
+            if(alice != null)
+            {
+                alice.GetComponent<Alice_Manger>().Alice_navmeshlink();
+            }
+            
         }
     }
    

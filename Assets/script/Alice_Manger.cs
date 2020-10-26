@@ -24,9 +24,8 @@ public enum OffMeshLinkFlag
 public class Alice_Manger : MonoBehaviour
 {
     public CentralDataViewer CentralDataViewer;//新增主控台cs
-    //private AliceState currentAliceState = AliceState.Idle;
     public NavMeshAgent navMeshAgent;
-    private SceneControl_Manger scenecontrol_manger;
+    private Bridge_control bridge_control;
 
     private float MoveVelocit = 0; 
 
@@ -58,15 +57,15 @@ public class Alice_Manger : MonoBehaviour
     void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
-
         targetRot = transform.rotation * Quaternion.Euler(Vector3.up * 180);
-        
+        bridge_control = GetComponent<Bridge_control>();
+
     }
     // Update is called once per frame
     void Update()
     {
         //AliceMovement();
-        Alice_navmeshlink();
+        //Alice_navmeshlink();
         //transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, Time.deltaTime * 50f);//愛麗絲轉180度
     }
     public void AliceMovement()
@@ -77,7 +76,6 @@ public class Alice_Manger : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(r, out hit))
             {
-                
                 navMeshAgent.SetDestination(hit.point);
                 //anim.SetBool("walk" , true); 已用blendtree控制idle/walk動畫
             }
@@ -91,7 +89,7 @@ public class Alice_Manger : MonoBehaviour
     {
         agent.Warp(pos);
     }
-    private void Alice_navmeshlink()
+    public void Alice_navmeshlink()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -110,14 +108,16 @@ public class Alice_Manger : MonoBehaviour
         //agent.SetDestination(target);
 
         if (!agent.isOnNavMesh)
+        {
             return;
-
+        }
         if (agent.remainingDistance > agent.stoppingDistance)
         {
 
             //判断OffMeshLink是否开启 有没有开始上楼或下楼的状态
             if (agent.isOnOffMeshLink)
             {
+
                 if(!IsHasLinkData)//老師打的
                 {
                     link = agent.currentOffMeshLinkData;
@@ -144,8 +144,7 @@ public class Alice_Manger : MonoBehaviour
                         //agent.GetComponent<MeshRenderer>().material.color = Color.red;
                         flag = OffMeshLinkFlag.LadderDwon;
                         //下楼的速度是1
-                        
-                       agent.speed = 1;
+                        agent.speed = 1;
                         anim.SetBool("climb", true);
                       
                         //agent.transform.Rotate(new Vector3(0, 180f, 0));
@@ -195,8 +194,9 @@ public class Alice_Manger : MonoBehaviour
         {
             item.gameObject.SetActive(false);
             CentralDataViewer.Item[0].SetActive(true);
-        }
+            bridge_control.bridge();
 
+        }
     }
 
     
