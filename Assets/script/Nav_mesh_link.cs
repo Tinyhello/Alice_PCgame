@@ -20,8 +20,14 @@ public class Nav_mesh_link : MonoBehaviour
     void Update()
     {
         if (pos_start)
+        {
             link.startPoint = transform.InverseTransformPoint(pos_start.position);
-        if(pos_end)
+        }
+
+        if (pos_end)
+        {
             link.endPoint = transform.InverseTransformPoint(pos_end.position);
+        }
+           
     }
 }

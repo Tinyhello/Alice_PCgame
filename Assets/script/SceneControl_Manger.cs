@@ -60,8 +60,8 @@ public class SceneControl_Manger : MonoBehaviour
             Ray r = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(r, out hit))   //,500f, mask  ,LayerMask.GetMask("Player")
             {
-                Debug.DrawLine(Camera.main.transform.position, hit.point, Color.red);
-                Debug.Log(hit.collider.gameObject.name);
+                //Debug.DrawLine(Camera.main.transform.position, hit.point, Color.red);
+                //Debug.Log(hit.collider.gameObject.name);
                 //if (hit.collider.gameObject.CompareTag("House_Plane"))  射線射到房子地板會替換房子的材質
                 //{
                 //    HouseRenderer.material = HouseMaterials[1];

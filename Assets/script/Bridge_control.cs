@@ -7,20 +7,18 @@ public class Bridge_control : MonoBehaviour
     public GameObject bridge_obstacle;
     public CentralDataViewer CentralDataViewer;//新增主控台cs
 
+
     private Vector3 pos;
     // Start is called before the first frame update
     void Start()
     {
         pos = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
-        
     }
 
     // Update is called once per frame
     void Update()
     {
         
-        
-
     }
 
     public void bridge()

@@ -50,6 +50,7 @@ public class Alice_Manger : MonoBehaviour
     private Quaternion targetRot;
     
     public Animator Bridge_animator;//宣告橋的動畫
+    public GameObject bridge;
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -121,7 +122,7 @@ public class Alice_Manger : MonoBehaviour
             //判断OffMeshLink是否开启 有没有开始上楼或下楼的状态
             if (agent.isOnOffMeshLink)
             {
-
+                //這邊叫alice不能走
                 if(!IsHasLinkData)//老師打的
                 {
                     link = agent.currentOffMeshLinkData;
@@ -148,7 +149,7 @@ public class Alice_Manger : MonoBehaviour
                         //agent.GetComponent<MeshRenderer>().material.color = Color.red;
                         flag = OffMeshLinkFlag.LadderDwon;
                         //下楼的速度是1
-                        agent.speed = 1;
+                        agent.speed = 1.8f;
                         anim.SetBool("climb", true);
                       
                         //agent.transform.Rotate(new Vector3(0, 180f, 0));
@@ -163,7 +164,7 @@ public class Alice_Manger : MonoBehaviour
                         //agent.GetComponent<MeshRenderer>().material.color = Color.green;
                         flag = OffMeshLinkFlag.LadderUp;
                         //上楼的速度是0.5f
-                        agent.speed = 0.5f;
+                        agent.speed = 1.3f;
                         anim.SetBool("climb", true);
                     }
                 }
@@ -174,7 +175,7 @@ public class Alice_Manger : MonoBehaviour
                 IsHasLinkData = false;
                 anim.SetBool("climb", false);
                 MoveVelocit = Mathf.Lerp(MoveVelocit, 1, Time.deltaTime); //距離很遠的時候+速，很近減速  跟  agent.remainingDistance 有關  ,walk狀態加速
-                agent.speed = MoveVelocit*6;
+                agent.speed = MoveVelocit*4;
                 flag = OffMeshLinkFlag.None;
                 SetMoveVelocity(MoveVelocit);
             }
@@ -202,6 +203,8 @@ public class Alice_Manger : MonoBehaviour
             CentralDataViewer.Item[1].SetActive(true);
             
             Bridge_animator.SetBool("IsBridge", true);
+            bridge.transform.Translate(0, -50f, 0);
+
         }
     }
 
