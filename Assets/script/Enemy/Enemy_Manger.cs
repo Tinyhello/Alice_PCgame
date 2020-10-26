@@ -6,7 +6,6 @@ using UnityEngine.AI;
 public class Enemy_Manger : MonoBehaviour
 {
     public CentralDataViewer CentralDataViewer;//新增主控台cs
-    public GameObject PlayerObj;
     public GameObject enemy;
     public GameObject Pos1;
     public GameObject Pos2;
