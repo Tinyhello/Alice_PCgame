@@ -20,6 +20,8 @@ public class CentralDataViewer : MonoBehaviour
 
     public GameObject PnlPlayerDead;//設定panel 愛麗絲死亡
     public GameObject BtnReStart;//設定按鈕愛麗絲重生
+
+    public GameObject CameraObj;
     void Update()
     {
         if (Player_isDead)
@@ -58,8 +60,23 @@ public class CentralDataViewer : MonoBehaviour
                 }
             }
         }
+        if (Input.GetKey(KeyCode.A))
+        {
+            if (CameraObj != null)
+            {
+                CameraObj.transform.Rotate(new Vector3(0, 10, 0), -30 * Time.deltaTime);
+            }
+        }
 
+        if (Input.GetKey(KeyCode.D))
+        {
+            if (CameraObj != null)
+            {
+                CameraObj.transform.Rotate(new Vector3(0, 10, 0), 30 * Time.deltaTime);
+            }
+        }
     }
+
 
     public void Reborn()//玩家重生方法-按鈕呼叫
     {

@@ -53,8 +53,8 @@ public class Move_stuff_01 : MonoBehaviour
         {
             mouseY = Input.GetAxis("Mouse Y");
             this.gameObject.transform.Translate(0, mouseY * speed * Time.deltaTime, 0);
-            Debug.Log("this.gameObject" + this.gameObject.transform.position.y);
-            Debug.Log("mouseY" + mouseY);
+            //Debug.Log("this.gameObject" + this.gameObject.transform.position.y);
+            //Debug.Log("mouseY" + mouseY);
             //Debug.Log(this.gameObject);
         }
         else if (Vector3.Distance(pos, this.gameObject.transform.position) >= limithigh)

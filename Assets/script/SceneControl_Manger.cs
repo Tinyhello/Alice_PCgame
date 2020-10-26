@@ -32,12 +32,15 @@ public class SceneControl_Manger : MonoBehaviour
     private Obstacle a;
     public Alice_Manger alice_manger;
 
-
+    //public Renderer HouseRenderer;換材質註解
+    //public Material[] HouseMaterials;換材質註解
 
     // Start is called before the first frame update
     void Start()
     {
         mouse1durtime = mouse1default;
+
+        //HouseRenderer.material = GetComponent<Renderer>().material; 換材質註解
     }
 
     // Update is called once per frame
@@ -53,25 +56,32 @@ public class SceneControl_Manger : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             Ray r = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(r, out hit))   //,500f, mask
+            if (Physics.Raycast(r, out hit))   //,500f, mask  ,LayerMask.GetMask("Player")
             {
+                Debug.DrawLine(Camera.main.transform.position, hit.point, Color.red);
+                Debug.Log(hit.collider.gameObject.name);
+                //if (hit.collider.gameObject.CompareTag("House_Plane"))  射線射到房子地板會替換房子的材質
+                //{
+                //    HouseRenderer.material = HouseMaterials[1];
+                //}
+
                 if (hit.transform.CompareTag("Move_Obj"))
                 {
-                    Debug.Log("a");
+                    //Debug.Log("a");
                     mouse1durtime -= Time.deltaTime;
-                    Debug.Log("b");
+                    //Debug.Log("b");
                     if (mouse1durtime < 0)//這邊判斷要按住才算
                     {
-                        Debug.Log("c");
+                        //Debug.Log("c");
                         mouse1 = true;//層級放反了，如果是Down這要連點很多下才會完成-=的條件
 
                         if (mouse1 == true)
                         {
-                            Debug.Log("d");
+                            //Debug.Log("d");
                             MoveTarget mvTarget = hit.transform.GetComponent<MoveTarget>();
                             if (mvTarget != null)
                             {
-                                Debug.Log("e");
+                                //Debug.Log("e");
                                 move_Stuff_01 = mvTarget.MoveObj.GetComponent<Move_stuff_01>();
                                 move_Stuff_01.Move_stuff(hit.transform.gameObject);
                                 alice_active1 = false;

@@ -16,6 +16,7 @@ TagManager:
   - Mushroom_Obstacle
   - Move_Obj
   - ClearItem
+  - House_Plane
   layers:
   - Default
   - TransparentFX
