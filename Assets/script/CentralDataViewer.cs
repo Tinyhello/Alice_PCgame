@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CentralDataViewer : MonoBehaviour
 {
-    public GameObject PlayerObj;//重生玩家
+    public GameObject RebirthPlayerObj;//重生玩家
     public Transform RebirthPos;//重生愛麗絲的座標
     public bool Player_isDead = false;//判斷愛麗絲死亡狀態
     public bool Player_isBorn = false;//判斷愛麗絲重生
@@ -21,7 +21,12 @@ public class CentralDataViewer : MonoBehaviour
     public GameObject PnlPlayerDead;//設定panel 愛麗絲死亡
     public GameObject BtnReStart;//設定按鈕愛麗絲重生
 
-    public GameObject CameraObj;
+    public GameObject[] CameraObj;
+    public ParticleSystem Particle;
+
+    public Animator Bridge_animator;//宣告橋的動畫
+
+
     void Update()
     {
         if (Player_isDead)
@@ -39,18 +44,21 @@ public class CentralDataViewer : MonoBehaviour
                     if (PlayerAlive > -1 && PlayerAlive < 1)
                     {
                         PnlPlayerDead.SetActive(false);//關愛麗絲重新開始畫面
-                        GameObject RebirthObj = Instantiate(PlayerObj, RebirthPos.position, RebirthPos.rotation);//重生愛麗絲的座標
+                        GameObject RebirthObj = Instantiate(RebirthPlayerObj, RebirthPos.position, RebirthPos.rotation);//重生愛麗絲的座標
                         RebirthObj.transform.localScale = new Vector3(1, 1, 1);//設定愛麗絲原本尺寸
                         RebirthObj.transform.parent = Ground.transform;//重生愛麗絲在父物件節點下
                         PlayerAlive++;//愛麗絲計數++
                         Player_isBorn = false;//愛麗絲已重生 狀態關
+                        Particle.Play();
                     }
 
                     Player_isDead = false;//重設愛麗絲死亡狀態 
                     WaitRebirthtime = 0.3f;//重設死亡等待時間
                     EnemyObjs[0].transform.position = EnemyResetPos[0].position;//重設小兵1座標
                     EnemyObjs[1].transform.position = EnemyResetPos[1].position;//重設小兵2座標
-                    Item[0].SetActive(false);//重設過關道具
+                    Bridge_animator.SetBool("IsBridge", false);//重設橋動畫
+                    
+                    //Item[0].SetActive(false);//重設過關道具
 
                     for (int i = 0; i < 3; i++)
                     {
@@ -62,17 +70,17 @@ public class CentralDataViewer : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.A))
         {
-            if (CameraObj != null)
+            if (CameraObj[0] != null)
             {
-                CameraObj.transform.Rotate(new Vector3(0, 10, 0), -30 * Time.deltaTime);
+                CameraObj[0].transform.Rotate(new Vector3(0, 10, 0), -30 * Time.deltaTime);
             }
         }
 
         if (Input.GetKey(KeyCode.D))
         {
-            if (CameraObj != null)
+            if (CameraObj[0] != null)
             {
-                CameraObj.transform.Rotate(new Vector3(0, 10, 0), 30 * Time.deltaTime);
+                CameraObj[0].transform.Rotate(new Vector3(0, 10, 0), 30 * Time.deltaTime);
             }
         }
     }

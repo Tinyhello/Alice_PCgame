@@ -15,8 +15,8 @@ TagManager:
   - MoveTry
   - Mushroom_Obstacle
   - Move_Obj
-  - ClearItem
   - House_Plane
+  - Key
   layers:
   - Default
   - TransparentFX
@@ -27,7 +27,7 @@ TagManager:
   - 
   - 
   - House_Plane
-  - 
+  - House
   - 
   - 
   - 

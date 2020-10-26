@@ -6,6 +6,7 @@ public class House_Plane : MonoBehaviour
 {
     public Renderer HouseRenderer;
     public Material[] HouseMaterials;
+    public Collider HouseCollider; //新增house的collider變數
     void Start()
     {
        
@@ -13,9 +14,12 @@ public class House_Plane : MonoBehaviour
     }
     void OnTriggerEnter(Collider TargetObj)
     {
+        Debug.Log("進來");
         if (TargetObj.gameObject.CompareTag("Alice"))
         {
             HouseRenderer.material = HouseMaterials[1];
+            HouseCollider.enabled = false;
+
         }
     }
 
@@ -25,6 +29,7 @@ public class House_Plane : MonoBehaviour
         if (TargetObj.gameObject.CompareTag("Alice"))
         {
             HouseRenderer.material = HouseMaterials[0];
+            HouseCollider.enabled = true;
         }
     }
 }

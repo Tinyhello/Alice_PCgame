@@ -25,7 +25,8 @@ public class Alice_Manger : MonoBehaviour
 {
     public CentralDataViewer CentralDataViewer;//新增主控台cs
     public NavMeshAgent navMeshAgent;
-    private Bridge_control bridge_control;
+    public LayerMask moveMask;//
+    private Bridge_control Bridge_control;
 
     private float MoveVelocit = 0; 
 
@@ -47,6 +48,8 @@ public class Alice_Manger : MonoBehaviour
     private Quaternion ladderDir;
     // Start is called before the first frame update
     private Quaternion targetRot;
+    
+    public Animator Bridge_animator;//宣告橋的動畫
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -58,7 +61,7 @@ public class Alice_Manger : MonoBehaviour
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         targetRot = transform.rotation * Quaternion.Euler(Vector3.up * 180);
-        bridge_control = GetComponent<Bridge_control>();
+        Bridge_control = GetComponent<Bridge_control>();
 
     }
     // Update is called once per frame
@@ -74,7 +77,7 @@ public class Alice_Manger : MonoBehaviour
         {
             Ray r = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(r, out hit))
+            if (Physics.Raycast(r, out hit,moveMask))
             {
                 navMeshAgent.SetDestination(hit.point);
                 //anim.SetBool("walk" , true); 已用blendtree控制idle/walk動畫
@@ -94,8 +97,9 @@ public class Alice_Manger : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit,moveMask))
             {
+                Debug.DrawLine(Camera.main.transform.position, hit.point, Color.green);
                 target = new Vector3(hit.point.x, transform.position.y, hit.point.z);
                 //设置目标后就可以移动了
                 //agent.destination = target;
@@ -190,12 +194,14 @@ public class Alice_Manger : MonoBehaviour
 
     private void OnCollisionEnter(Collision item)//碰到過關道具
     {
-        if (item.gameObject.CompareTag("ClearItem"))
+        if (item.gameObject.CompareTag("Key"))
         {
             item.gameObject.SetActive(false);
-            CentralDataViewer.Item[0].SetActive(true);
-            bridge_control.bridge();
-
+            //CentralDataViewer.Item[0].SetActive(true);
+            //Bridge_control.bridge();
+            CentralDataViewer.Item[1].SetActive(true);
+            
+            Bridge_animator.SetBool("IsBridge", true);
         }
     }
 

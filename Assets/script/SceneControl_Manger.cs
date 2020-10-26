@@ -69,6 +69,7 @@ public class SceneControl_Manger : MonoBehaviour
 
                 if (hit.transform.CompareTag("Move_Obj"))
                 {
+                    alice_active1 = false;
                     //Debug.Log("a");
                     mouse1durtime -= Time.deltaTime;
                     //Debug.Log("b");
@@ -85,7 +86,7 @@ public class SceneControl_Manger : MonoBehaviour
                                 move_Stuff_01 = mvTarget.MoveObj.GetComponent<Move_stuff_01>();
                                 move_Stuff_01.Move_stuff(hit.transform.gameObject);
                                 mouse1 = false;
-                                alice_active1 = false;
+                                
                             }
                         }
 
