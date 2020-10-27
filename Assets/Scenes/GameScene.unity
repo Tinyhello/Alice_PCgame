@@ -131,17 +131,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 47a3045b1b748d0409526ea64631843d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.07
+      value: -12.14
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 47a3045b1b748d0409526ea64631843d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.9
+      value: 7.45
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 47a3045b1b748d0409526ea64631843d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.17
+      value: -7.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 47a3045b1b748d0409526ea64631843d,
         type: 3}
@@ -5148,13 +5148,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AgentTypeID: 0
-  m_StartPoint: {x: 0.0030118339, y: 3.8354635, z: -1.0235375}
-  m_EndPoint: {x: -0.11290235, y: -1.6790045, z: 1.0941343}
+  m_StartPoint: {x: 0.07773763, y: 3.835465, z: -0.64757025}
+  m_EndPoint: {x: -0.021651817, y: -1.6789961, z: 0.95120674}
   m_Width: 0
   m_CostModifier: -1
   m_Bidirectional: 1
   m_AutoUpdatePosition: 0
-  m_Area: 0
+  m_Area: 4
 --- !u!1 &331493067
 GameObject:
   m_ObjectHideFlags: 0
@@ -9004,13 +9004,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AgentTypeID: 0
-  m_StartPoint: {x: -0.21575214, y: 1.8851225, z: 0.21956827}
-  m_EndPoint: {x: 0.0643485, y: -1.273062, z: -0.72410625}
+  m_StartPoint: {x: -0.24993211, y: 1.9077753, z: 0.454053}
+  m_EndPoint: {x: 0.010266737, y: -1.4066929, z: -0.6301811}
   m_Width: 0
   m_CostModifier: -1
   m_Bidirectional: 1
   m_AutoUpdatePosition: 0
-  m_Area: 0
+  m_Area: 4
 --- !u!1 &573610504
 GameObject:
   m_ObjectHideFlags: 0
@@ -23822,13 +23822,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AgentTypeID: 0
-  m_StartPoint: {x: 0.21150045, y: 1.907762, z: -0.35784402}
-  m_EndPoint: {x: 0.12200231, y: -1.4067038, z: 0.7335969}
+  m_StartPoint: {x: 0.25683522, y: 1.9077713, z: -0.52824926}
+  m_EndPoint: {x: 0.13185719, y: -1.4066958, z: 0.8240928}
   m_Width: 0
   m_CostModifier: -1
   m_Bidirectional: 1
   m_AutoUpdatePosition: 0
-  m_Area: 0
+  m_Area: 4
 --- !u!1 &943886469
 GameObject:
   m_ObjectHideFlags: 0
@@ -44994,7 +44994,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2056961516}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1.1210957, y: 0.69799453, z: 1.1462762}
@@ -47277,6 +47277,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3479562515113558437}
     m_Modifications:
+    - target: {fileID: 428560568400958167, guid: 48ebb430ac781e641bea2c382fb4741a,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 428560568400958167, guid: 48ebb430ac781e641bea2c382fb4741a,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 428560568400958167, guid: 48ebb430ac781e641bea2c382fb4741a,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 428560568400958167, guid: 48ebb430ac781e641bea2c382fb4741a,
+        type: 3}
+      propertyPath: m_Interpolate
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5673109436900511569, guid: 48ebb430ac781e641bea2c382fb4741a,
         type: 3}
       propertyPath: CentralDataViewer
@@ -47292,6 +47312,21 @@ PrefabInstance:
       propertyPath: bridge
       value: 
       objectReference: {fileID: 587840733}
+    - target: {fileID: 7358794708569397667, guid: 48ebb430ac781e641bea2c382fb4741a,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.10608
+      objectReference: {fileID: 0}
+    - target: {fileID: 7358794708569397667, guid: 48ebb430ac781e641bea2c382fb4741a,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.026323894
+      objectReference: {fileID: 0}
+    - target: {fileID: 7358794708569397667, guid: 48ebb430ac781e641bea2c382fb4741a,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.10608
+      objectReference: {fileID: 0}
     - target: {fileID: 8665934923723442167, guid: 48ebb430ac781e641bea2c382fb4741a,
         type: 3}
       propertyPath: m_Enabled
@@ -47300,17 +47335,17 @@ PrefabInstance:
     - target: {fileID: 8665934923723442168, guid: 48ebb430ac781e641bea2c382fb4741a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.65
+      value: -4.62
       objectReference: {fileID: 0}
     - target: {fileID: 8665934923723442168, guid: 48ebb430ac781e641bea2c382fb4741a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.78
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 8665934923723442168, guid: 48ebb430ac781e641bea2c382fb4741a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 27.64
+      value: 27.59
       objectReference: {fileID: 0}
     - target: {fileID: 8665934923723442168, guid: 48ebb430ac781e641bea2c382fb4741a,
         type: 3}
@@ -52292,7 +52327,7 @@ PrefabInstance:
     - target: {fileID: 5583670464397273518, guid: 830dc05ebb223f248b51eac4895d5fdf,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5583670464533422718, guid: 830dc05ebb223f248b51eac4895d5fdf,
         type: 3}
@@ -59722,10 +59757,20 @@ PrefabInstance:
       propertyPath: Pos2
       value: 
       objectReference: {fileID: 1983370389}
+    - target: {fileID: 5090660981884045574, guid: 8ecc64f34c4cdb549ad4bbd54fa92798,
+        type: 3}
+      propertyPath: m_AutoTraverseOffMeshLink
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5090660981884045626, guid: 8ecc64f34c4cdb549ad4bbd54fa92798,
         type: 3}
       propertyPath: m_Name
       value: Enemy2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090660981884045626, guid: 8ecc64f34c4cdb549ad4bbd54fa92798,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5090660983659266437, guid: 8ecc64f34c4cdb549ad4bbd54fa92798,
         type: 3}
@@ -62909,7 +62954,7 @@ NavMeshAgent:
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 1.5
-  m_AutoTraverseOffMeshLink: 0
+  m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 3.25

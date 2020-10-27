@@ -218,7 +218,7 @@ public class Alice_Manger : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision item)//碰到過關道具
-    {
+    {   
         if (item.gameObject.CompareTag("Key"))
         {
             item.gameObject.SetActive(false);
@@ -231,8 +231,22 @@ public class Alice_Manger : MonoBehaviour
 
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        
+        if (other.gameObject.CompareTag("Key"))
+        {
+            other.gameObject.SetActive(false);
+            //CentralDataViewer.Item[0].SetActive(true);
+            //Bridge_control.bridge();
+            CentralDataViewer.Item[1].SetActive(true);
+            
+            Bridge_animator.SetBool("IsBridge", true);
+            bridge.transform.Translate(0, -50f, 0);
 
-    
+        }
+    }
+
 }
 
 
