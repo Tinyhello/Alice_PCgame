@@ -12,7 +12,7 @@ Material:
   m_ShaderKeywords: 
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
@@ -20,19 +20,19 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Floats:
-    - _HorizonLineContribution: 1
-    - _HorizonLineExponent: 2.15
-    - _SkyGradientExponent: 1261.95
+    - _HorizonLineContribution: 0.926
+    - _HorizonLineExponent: 1.74
+    - _SkyGradientExponent: 0.79
     - _SunDiscContribution: 1
-    - _SunDiscExponent: 250000
-    - _SunDiscMultiplier: 208.9
-    - _SunHaloContribution: 0
+    - _SunDiscExponent: 250010.2
+    - _SunDiscMultiplier: 223.26
+    - _SunHaloContribution: 0.87
     - _SunHaloExponent: 51.12
     - _Title: 0
     - __dirty: 0
     m_Colors:
-    - _HorizonLineColor: {r: 1, g: 0.56632096, b: 0.33490568, a: 1}
-    - _SkyGradientBottom: {r: 0, g: 0.14910263, b: 0.33962262, a: 1}
-    - _SkyGradientTop: {r: 0.4481132, g: 0.96975946, b: 1, a: 1}
-    - _SunDiscColor: {r: 1, g: 0.9548163, b: 0.9386792, a: 1}
+    - _HorizonLineColor: {r: 1, g: 0.7641452, b: 0.759434, a: 1}
+    - _SkyGradientBottom: {r: 0.064836234, g: 0.23398016, b: 0.4433962, a: 1}
+    - _SkyGradientTop: {r: 0, g: 1, b: 0.9322033, a: 1}
+    - _SunDiscColor: {r: 1, g: 1, b: 1, a: 1}
     - _SunHaloColor: {r: 1, g: 0, b: 0, a: 1}
