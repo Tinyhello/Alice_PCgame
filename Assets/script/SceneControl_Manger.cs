@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
 
 
 public class SceneControl_Manger : MonoBehaviour
@@ -48,6 +48,7 @@ public class SceneControl_Manger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (EventSystem.current.IsPointerOverGameObject()) return; //如果點到UI就跳出不執行後面的Raycast
         mousecontrol();
         mushroom_obstacle_tmiecontrol();
         Alicecontrol();
