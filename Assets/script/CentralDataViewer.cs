@@ -44,9 +44,9 @@ public class CentralDataViewer : MonoBehaviour
                     if (PlayerAlive > -1 && PlayerAlive < 1)
                     {
                         PnlPlayerDead.SetActive(false);//關愛麗絲重新開始畫面
-                        GameObject RebirthObj = Instantiate(RebirthPlayerObj, RebirthPos.position, RebirthPos.rotation);//重生愛麗絲的座標
-                        RebirthObj.transform.localScale = new Vector3(1, 1, 1);//設定愛麗絲原本尺寸
-                        RebirthObj.transform.parent = Ground.transform;//重生愛麗絲在父物件節點下
+                        GameObject RebirthObj = Instantiate(RebirthPlayerObj, RebirthPos.position, RebirthPos.rotation, RebirthPos);//重生愛麗絲的座標
+                        //RebirthObj.transform.localScale = new Vector3(1, 1, 1);//設定愛麗絲原本尺寸
+                        //RebirthObj.transform.parent = Ground.transform;//重生愛麗絲在父物件節點下
                         PlayerAlive++;//愛麗絲計數++
                         Player_isBorn = false;//愛麗絲已重生 狀態關
                         Particle.Play();
@@ -72,7 +72,7 @@ public class CentralDataViewer : MonoBehaviour
         {
             if (CameraObj[0] != null)
             {
-                CameraObj[0].transform.Rotate(new Vector3(0, 10, 0), -30 * Time.deltaTime);
+                CameraObj[0].transform.Rotate(new Vector3(0, 10, 0), 30 * Time.deltaTime);
             }
         }
 
@@ -80,7 +80,7 @@ public class CentralDataViewer : MonoBehaviour
         {
             if (CameraObj[0] != null)
             {
-                CameraObj[0].transform.Rotate(new Vector3(0, 10, 0), 30 * Time.deltaTime);
+                CameraObj[0].transform.Rotate(new Vector3(0, 10, 0), -30 * Time.deltaTime);
             }
         }
     }
