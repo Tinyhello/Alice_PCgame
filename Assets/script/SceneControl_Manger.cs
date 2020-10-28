@@ -37,11 +37,11 @@ public class SceneControl_Manger : MonoBehaviour
     //public Material[] HouseMaterials;換材質註解
 
     private GameObject alice;
+    public click_effect click;
     // Start is called before the first frame update
     void Start()
     {
         mouse1durtime = mouse1default;
-
         //HouseRenderer.material = GetComponent<Renderer>().material; 換材質註解
     }
 
@@ -68,15 +68,19 @@ public class SceneControl_Manger : MonoBehaviour
                 //    HouseRenderer.material = HouseMaterials[1];
                 //}
 
+
+
                 if (hit.transform.CompareTag("Move_Obj"))
                 {
                     alice_active1 = false;
-                    //Debug.Log("a");
                     mouse1durtime -= Time.deltaTime;
-                    //Debug.Log("b");
+                    click = hit.transform.GetComponent<click_effect>();
+                    
+
+
+
                     if (mouse1durtime < 0)//這邊判斷要按住才算
                     {
-
                         if (mouse1 == true)
                         {
                             //Debug.Log("d");
@@ -87,10 +91,17 @@ public class SceneControl_Manger : MonoBehaviour
                                 move_Stuff_01 = mvTarget.MoveObj.GetComponent<Move_stuff_01>();
                                 move_Stuff_01.Move_stuff(hit.transform.gameObject);
                                 mouse1 = false;
-                                
+
+                                if (click != null)
+                                {
+                                    click.clickdown();
+                                }
+
+
+
+
                             }
                         }
-
                     }
                     //停止控制Alice. 
                     //存滑鼠點到的物件
@@ -131,12 +142,16 @@ public class SceneControl_Manger : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
+            click.clickup();
             if (move_Stuff_01)
             {
                 move_Stuff_01.Move_stuff(null);//機關儲存的value要切成null
                 mouse1durtime = mouse1default;//滑鼠只要離開機關計時器就要回默認值
                 mouse1 = true;//滑鼠放開機關就不能動了
-                
+                click.clickup();
+
+
+
 
             }
             
