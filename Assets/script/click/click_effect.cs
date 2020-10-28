@@ -9,12 +9,12 @@ public class click_effect : MonoBehaviour
 
     public void clickdown()
     {
-        houserenderer.material = housematerials[0];
+        houserenderer.material = housematerials[2];
     }
 
     public void clickup()
     {
-        houserenderer.material = housematerials[1];
+        houserenderer.material = housematerials[3];
     }
 
 

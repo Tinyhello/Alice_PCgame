@@ -38,6 +38,7 @@ public class SceneControl_Manger : MonoBehaviour
 
     private GameObject alice;
     public click_effect click;
+    public House_Plane house_plane;
     // Start is called before the first frame update
     void Start()
     {
@@ -142,34 +143,33 @@ public class SceneControl_Manger : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            click.clickup();
-            if (move_Stuff_01)
+            if (house_plane.aaa == null)//alic在房子裡
             {
-                move_Stuff_01.Move_stuff(null);//機關儲存的value要切成null
-                mouse1durtime = mouse1default;//滑鼠只要離開機關計時器就要回默認值
-                mouse1 = true;//滑鼠放開機關就不能動了
-                click.clickup();
-
-
-
-
+                if (move_Stuff_01)
+                {
+                    Debug.Log("變色!");
+                    move_Stuff_01.Move_stuff(null);//機關儲存的value要切成null
+                    mouse1durtime = mouse1default;//滑鼠只要離開機關計時器就要回默認值
+                    mouse1 = true;//滑鼠放開機關就不能動了
+                    click.clickup();
+                }
             }
+
+
+            
             
         }
     }
 
     public void Alicecontrol()
     {
-
         if(alice_active1 ==true && alice_active2 == true)
         {
-            
             alice = GameObject.FindWithTag("Alice");
             if(alice != null)
             {
                 alice.GetComponent<Alice_Manger>().Alice_navmeshlink();
             }
-            
         }
     }
    

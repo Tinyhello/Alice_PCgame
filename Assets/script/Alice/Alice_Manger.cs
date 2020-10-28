@@ -57,19 +57,29 @@ public class Alice_Manger : MonoBehaviour
     private Move_stuff_01 currectLinkObj;
     public float MoveBaseVelocit = 3.5f;
     public float stopOffset = 2f;
+
+    public GameObject bridge01;
+    public GameObject bridge02;
+    public GameObject bridge03;
+    public GameObject bridge04;
+    //public bridge_effect bridge_effect;
+    public bridge_effect[] bridge_effects;
+
+    public bridge_effect bridge_Effect;
+
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         target = transform.position;
         rg = GetComponent<Rigidbody>();
+        
     }
-
     void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         targetRot = transform.rotation * Quaternion.Euler(Vector3.up * 180);
         Bridge_control = GetComponent<Bridge_control>();
-
     }
     // Update is called once per frame
     void Update()
@@ -213,35 +223,55 @@ public class Alice_Manger : MonoBehaviour
         anim.SetFloat("MoveVelocity", val);
     }
 
-    private void OnCollisionEnter(Collision item)//碰到過關道具
-    {
-        if (item.gameObject.CompareTag("Key"))
-        {
-            item.gameObject.SetActive(false);
-            //CentralDataViewer.Item[0].SetActive(true);
-            //Bridge_control.bridge();
-            CentralDataViewer.Item[1].SetActive(true);
+    //private void OnCollisionEnter(Collision item)//碰到過關道具
+    //{
+    //    if (item.gameObject.CompareTag("Key"))
+    //    {
+    //        item.gameObject.SetActive(false);
+    //        //CentralDataViewer.Item[0].SetActive(true);
+    //        //Bridge_control.bridge();
+    //        CentralDataViewer.Item[1].SetActive(true);
             
-            Bridge_animator.SetBool("IsBridge", true);
-            bridge.transform.Translate(0, -50f, 0);
-        }
-    }
+    //        Bridge_animator.SetBool("IsBridge", true);
+    //        bridge.transform.Translate(0, -50f, 0);
+    //    }
+    //}
 
     private void OnTriggerEnter(Collider other)
     {
         
         if (other.gameObject.CompareTag("Key"))
         {
+            Bridge_animator.SetTrigger("finish");
             other.gameObject.SetActive(false);
             //CentralDataViewer.Item[0].SetActive(true);
             //Bridge_control.bridge();
             CentralDataViewer.Item[1].SetActive(true);
-            
-            Bridge_animator.SetBool("IsBridge", true);
-            bridge.transform.Translate(0, -50f, 0);
-
+            bridge_Effect.bridgeup();
+            //Bridge_animator.SetBool("IsBridge", true);
+            //if(Bridge_animator.GetBool("IsBridge") == true)
+            //{
+            //    for(int i = 0; i < bridge_effects.Length; i++)
+            //    {
+            //        bridge_effects[i].bridgeup();
+            //    }   
+            //}
+            //bridge.transform.Translate(0, -50f, 0);
         }
     }
+
+    //public void bridgeanim()
+    //{
+        
+    //    if (!Bridge_animator.GetBool("finish"))
+    //    {
+    //        for (int i = 0; i < bridge_effects.Length; i++)
+    //        {
+    //            bridge_effects[i].bridgedown();
+    //        }
+    //    }
+    //}
+
 
 }
 
