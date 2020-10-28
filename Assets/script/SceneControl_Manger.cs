@@ -24,6 +24,8 @@ public class SceneControl_Manger : MonoBehaviour
     private bool alice_active1 = false;
     private bool alice_active2 = false;
 
+    
+    private bool choose1stuff = true; 
     RaycastHit hit;
     public LayerMask mask = 1 << 8; //打開第8層
 
@@ -33,8 +35,6 @@ public class SceneControl_Manger : MonoBehaviour
 
     //public Renderer HouseRenderer;換材質註解
     //public Material[] HouseMaterials;換材質註解
-
-    private click_house click;
 
     private GameObject alice;
     // Start is called before the first frame update
@@ -71,16 +71,12 @@ public class SceneControl_Manger : MonoBehaviour
                 if (hit.transform.CompareTag("Move_Obj"))
                 {
                     alice_active1 = false;
+                    //Debug.Log("a");
                     mouse1durtime -= Time.deltaTime;
-                    click = hit.transform.GetComponent<click_house>();
-                    if (click != null)
-                    {
-                        //click.changematerial();
-                    }
-
-
+                    //Debug.Log("b");
                     if (mouse1durtime < 0)//這邊判斷要按住才算
                     {
+
                         if (mouse1 == true)
                         {
                             //Debug.Log("d");
@@ -91,9 +87,13 @@ public class SceneControl_Manger : MonoBehaviour
                                 move_Stuff_01 = mvTarget.MoveObj.GetComponent<Move_stuff_01>();
                                 move_Stuff_01.Move_stuff(hit.transform.gameObject);
                                 mouse1 = false;
+                                
                             }
                         }
+
                     }
+                    //停止控制Alice. 
+                    //存滑鼠點到的物件
                 }
                 else if (Input.GetMouseButtonDown(0))
                 {
@@ -126,19 +126,18 @@ public class SceneControl_Manger : MonoBehaviour
                 {
                     alice_active1 = true;
                     alice_active2 = true;
-                    
                 }
             }
         }
-        if(Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0))
         {
-            //click.changematerial2();
             if (move_Stuff_01)
             {
                 move_Stuff_01.Move_stuff(null);//機關儲存的value要切成null
                 mouse1durtime = mouse1default;//滑鼠只要離開機關計時器就要回默認值
                 mouse1 = true;//滑鼠放開機關就不能動了
                 
+
             }
             
         }

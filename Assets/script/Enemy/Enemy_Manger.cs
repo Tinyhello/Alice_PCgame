@@ -49,7 +49,6 @@ public class Enemy_Manger : MonoBehaviour
         //接觸Alice後Alice要陣亡
         if (isMove) //true
         {
-            navMeshAgent.speed = 2f;
             //Debug.Log("go to isMove");
             if (Vector3.Distance(transform.position, enemy.transform.position) <= navMeshAgent.stoppingDistance)
             {
@@ -109,10 +108,17 @@ public class Enemy_Manger : MonoBehaviour
                     Debug.DrawLine(Ray.position, hit.point, Color.green);
                     //Debug.Log("Find Alice");
                     isFind = true;
-                    navMeshAgent.speed = 3.5f;
+                    navMeshAgent.speed = 4f;
                     //Debug.Log("Yes");
                     //小兵要加速
                     //追愛麗絲
+                }
+                else
+                {
+                    
+                    navMeshAgent.speed = 2.5f;
+                    //Debug.Log("No");
+                    //不追愛麗絲
                 }
             }
 
@@ -135,17 +141,22 @@ public class Enemy_Manger : MonoBehaviour
                 isFind = false; //isfind 需要另外宣告
             }
         }
+
     }
+
     public void LookAround(Transform targets)
     {
         Vector3 forwardLeft = Quaternion.Euler(0, -45, 0) * targets.forward * viewRadius;
+
         for (int i = 0; i <= viewAngleStep; i++)
         {
             Vector3 vector = Quaternion.Euler(0, (90 / viewAngleStep) * i, 0) * forwardLeft;
             Vector3 pos = targets.position + vector;
             Debug.DrawLine(targets.position, pos, Color.red);
         }
+
     }
+
     public void Attack()
     {
 
@@ -153,8 +164,10 @@ public class Enemy_Manger : MonoBehaviour
 
     private void OnCollisionEnter(Collision AttackTarget)
     {
+        //Debug.Log("Attack1");
         if (AttackTarget.gameObject.CompareTag("Alice"))
         {
+            //Debug.Log("Attack2");
             Attack();
             //播放撲克士兵攻擊動畫
             if (CentralDataViewer.PlayerAlive == 1)
@@ -166,8 +179,8 @@ public class Enemy_Manger : MonoBehaviour
                 CentralDataViewer.PlayerAlive--;//愛麗絲計數--
             }
         }
-    }
 
+    }
 }
 
 

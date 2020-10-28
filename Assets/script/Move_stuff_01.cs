@@ -14,8 +14,7 @@ public class Move_stuff_01 : MonoBehaviour
 
     public float limithigh = 3;
     public CentralDataViewer CentralDataViewer;//新增主控台cs
-
-    private bool isAliceHere = false;
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -35,19 +34,15 @@ public class Move_stuff_01 : MonoBehaviour
     {
 
         inobj = inObj;
-    }
 
-    public void Aliceclimb(bool istrue)
-    {
-        isAliceHere = istrue;
+
+        //Debug.Log(inObj);
     }
 
     public void Move()
     {
         //Debug.Log("pos.y" + pos.y);
         //Debug.Log("this.gameObject" + this.gameObject.transform.position.y);
-        if (isAliceHere)
-            return;
 
         if (inobj == null)
         {

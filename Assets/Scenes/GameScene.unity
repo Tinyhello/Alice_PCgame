@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 0}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6076,7 +6076,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 0}
+  sharedProfile: {fileID: 11400000, guid: 699b816c30b3bb745ad8eb7d92058a6c, type: 2}
   isGlobal: 1
   blendDistance: 0
   weight: 1
@@ -31752,7 +31752,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RebirthPlayerObj: {fileID: 8665934923723442170, guid: 48ebb430ac781e641bea2c382fb4741a,
     type: 3}
-  StartPlayerObj: {fileID: 0}
   RebirthPos: {fileID: 1892489874}
   Player_isDead: 0
   Player_isBorn: 0
@@ -31771,15 +31770,13 @@ MonoBehaviour:
   - {fileID: 8601652616518563323}
   - {fileID: 469869806602970825}
   - {fileID: 1356768659}
-  Game_Plane_Exit: {fileID: 0}
   PnlPlayerDead: {fileID: 7797404330705353062}
   BtnReStart: {fileID: 7797404330189389498}
-  StartEnemyObjs: []
-  Particle: {fileID: 756650590}
   CameraObj:
   - {fileID: 341540381}
   - {fileID: 1845628910}
   - {fileID: 474397069}
+  Particle: {fileID: 756650590}
   Bridge_animator: {fileID: 1994428710}
 --- !u!1 &1470486339
 GameObject:
@@ -44389,7 +44386,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2031375252
 Transform:
@@ -68386,7 +68383,7 @@ GameObject:
   m_TagString: Move_Obj
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &8258417529234274501
 GameObject:
