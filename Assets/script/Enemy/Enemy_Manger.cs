@@ -49,6 +49,7 @@ public class Enemy_Manger : MonoBehaviour
         //接觸Alice後Alice要陣亡
         if (isMove) //true
         {
+            navMeshAgent.speed = 2f;
             //Debug.Log("go to isMove");
             if (Vector3.Distance(transform.position, enemy.transform.position) <= navMeshAgent.stoppingDistance)
             {
@@ -108,7 +109,7 @@ public class Enemy_Manger : MonoBehaviour
                     Debug.DrawLine(Ray.position, hit.point, Color.green);
                     //Debug.Log("Find Alice");
                     isFind = true;
-                    navMeshAgent.speed = 4f;
+                    navMeshAgent.speed = 3.5f;
                     //Debug.Log("Yes");
                     //小兵要加速
                     //追愛麗絲
