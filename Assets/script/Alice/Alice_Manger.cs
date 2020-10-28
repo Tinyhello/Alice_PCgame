@@ -51,6 +51,12 @@ public class Alice_Manger : MonoBehaviour
     
     public Animator Bridge_animator;//宣告橋的動畫
     public GameObject bridge;
+
+    private GameObject climbnodrag;
+
+    private Move_stuff_01 currectLinkObj;
+    public float MoveBaseVelocit = 3.5f;
+    public float stopOffset = 2f;
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -125,6 +131,9 @@ public class Alice_Manger : MonoBehaviour
                 //這邊叫alice不能走
                 if(!IsHasLinkData)//老師打的
                 {
+                    GameObject c_ = (agent.navMeshOwner as Component).gameObject;//這邊型轉
+                    currectLinkObj = c_.GetComponentInParent<Move_stuff_01>();
+                    currectLinkObj?.Aliceclimb(true);
                     link = agent.currentOffMeshLinkData;
                     center = (link.startPos + link.endPos) * 0.5f;
                     if (link.startPos.y > center.y)
@@ -171,18 +180,29 @@ public class Alice_Manger : MonoBehaviour
             }
             else //判断OffMeshLink是否关闭 //滑鼠點擊目標 walk狀態
             {
+                agent.nextPosition = transform.position;
                 agent.updateRotation = true;
+                agent.updatePosition = true;
+
+
                 IsHasLinkData = false;
                 anim.SetBool("climb", false);
-                MoveVelocit = Mathf.Lerp(MoveVelocit, 1, Time.deltaTime); //距離很遠的時候+速，很近減速  跟  agent.remainingDistance 有關  ,walk狀態加速
-                agent.speed = MoveVelocit*4;
+                float targetVelocit_ = Mathf.Min(((agent.remainingDistance- agent.stoppingDistance) / stopOffset), 1);
+                MoveVelocit = Mathf.Lerp(MoveVelocit, targetVelocit_, Time.deltaTime); //距離很遠的時候+速，很近減速  跟  agent.remainingDistance 有關  ,walk狀態加速
+                
+                agent.speed = MoveVelocit* MoveBaseVelocit;
                 flag = OffMeshLinkFlag.None;
                 SetMoveVelocity(MoveVelocit);
+                currectLinkObj?.Aliceclimb(false);
+                currectLinkObj = null;
             }
         }
         else //idle狀態 MoveVelocit歸零
         {
-            MoveVelocit = 0; //愛麗絲走到目標點切回idle狀態0
+            //MoveVelocit = 0; //愛麗絲走到目標點切回idle狀態0
+            MoveVelocit = Mathf.Lerp(Mathf.Min(MoveVelocit, .5f), 0, Time.deltaTime); //距離很遠的時候+速，很近減速  跟  agent.remainingDistance 有關  ,walk狀態加速
+            agent.updateRotation = false;
+            agent.updatePosition = false;
             //agent.speed = MoveVelocit * 3.5f; //不需要多打
             SetMoveVelocity(MoveVelocit);
         }
@@ -204,11 +224,23 @@ public class Alice_Manger : MonoBehaviour
             
             Bridge_animator.SetBool("IsBridge", true);
             bridge.transform.Translate(0, -50f, 0);
-
         }
     }
 
-    
+    private void OnTriggerEnter(Collider other)
+    {
+
+        if (other.gameObject.CompareTag("Key"))
+        {
+            other.gameObject.SetActive(false);
+            //CentralDataViewer.Item[0].SetActive(true);
+            //Bridge_control.bridge();
+            CentralDataViewer.Item[1].SetActive(true);
+
+            Bridge_animator.SetBool("IsBridge", true);
+            bridge.transform.Translate(0, -50f, 0);
+        }
+    }
 }
 
 
