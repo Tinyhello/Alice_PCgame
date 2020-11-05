@@ -158,29 +158,29 @@ public class Enemy_Manger : MonoBehaviour
 
     }
 
-    public void Attack()
-    {
-
-    }
-
+    
     private void OnCollisionEnter(Collision AttackTarget)
     {
-        //Debug.Log("Attack1");
         if (AttackTarget.gameObject.CompareTag("Alice"))
         {
-            //Debug.Log("Attack2");
-            Attack();
-            //播放撲克士兵攻擊動畫
+            CentralDataViewer.restartbridge();
+            Debug.Log("嘿嘿嘿嘿嘿嘿嘿嘿");
             if (CentralDataViewer.PlayerAlive == 1)
             {
                 CentralDataViewer.Player_isBorn = false;
                 CentralDataViewer.Player_isDead = true;
+                
                 AttackTarget.gameObject.SetActive(false);//停用愛麗絲
                 Destroy(AttackTarget.gameObject, 2f);//2秒後消滅愛麗絲 
                 CentralDataViewer.PlayerAlive--;//愛麗絲計數--
             }
         }
 
+    }
+
+    public void EnemyPosReset()
+    {
+        navMeshAgent.Warp(Pos1.transform.position);//把小兵的agent 重生到Pos1座標才不會物件移位 *重點*
     }
 }
 

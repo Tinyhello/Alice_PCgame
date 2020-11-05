@@ -23,10 +23,19 @@ public class SceneControl_Manger : MonoBehaviour
     //====判斷Alice的優先程度
     private bool alice_active1 = false;
     private bool alice_active2 = false;
+    //====拖動變色
+    private bool colorYes = true;
+    //====旋轉鏡頭
+    public GameObject CameraObj;
+    public Float_Obj[] _obj;
 
     
     private bool choose1stuff = true; 
     RaycastHit hit;
+    RaycastHit hit_UI;
+    private bool ray_UI = false;
+    private bool ray_game = false;
+
     public LayerMask mask = 1 << 8; //打開第8層
 
     public GameObject mushroom_obstacle;
@@ -37,7 +46,7 @@ public class SceneControl_Manger : MonoBehaviour
     //public Material[] HouseMaterials;換材質註解
 
     private GameObject alice;
-    public click_effect click;
+    private click_effect click;
     public House_Plane house_plane;
     // Start is called before the first frame update
     void Start()
@@ -53,6 +62,7 @@ public class SceneControl_Manger : MonoBehaviour
         mousecontrol();
         mushroom_obstacle_tmiecontrol();
         Alicecontrol();
+        Cameraturn();
     }
 
     public void mousecontrol()
@@ -75,20 +85,19 @@ public class SceneControl_Manger : MonoBehaviour
                 {
                     alice_active1 = false;
                     mouse1durtime -= Time.deltaTime;
-                    click = hit.transform.GetComponent<click_effect>();
                     
 
 
 
                     if (mouse1durtime < 0)//這邊判斷要按住才算
                     {
-                        if (mouse1 == true)
+                        if (mouse1 == true && colorYes == true)
                         {
                             //Debug.Log("d");
                             MoveTarget mvTarget = hit.transform.GetComponent<MoveTarget>();
                             if (mvTarget != null)
                             {
-                                //Debug.Log("e");
+                                click = hit.transform.GetComponent<click_effect>();//
                                 move_Stuff_01 = mvTarget.MoveObj.GetComponent<Move_stuff_01>();
                                 move_Stuff_01.Move_stuff(hit.transform.gameObject);
                                 mouse1 = false;
@@ -97,7 +106,7 @@ public class SceneControl_Manger : MonoBehaviour
                                 {
                                     click.clickdown();
                                 }
-
+                                colorYes = false;
 
 
 
@@ -152,6 +161,8 @@ public class SceneControl_Manger : MonoBehaviour
                     mouse1durtime = mouse1default;//滑鼠只要離開機關計時器就要回默認值
                     mouse1 = true;//滑鼠放開機關就不能動了
                     click.clickup();
+                    colorYes = true;
+                    
                 }
             }
 
@@ -168,7 +179,7 @@ public class SceneControl_Manger : MonoBehaviour
             alice = GameObject.FindWithTag("Alice");
             if(alice != null)
             {
-                alice.GetComponent<Alice_Manger>().Alice_navmeshlink();
+                alice.GetComponent<Alice_Manger>().Alice_navmeshmove();
             }
         }
     }
@@ -186,4 +197,41 @@ public class SceneControl_Manger : MonoBehaviour
         }
         
     }
+
+    public void Cameraturn()
+    {
+        if (Input.GetKey(KeyCode.A))
+        {
+            if (CameraObj != null)
+            {
+                CameraObj.transform.Rotate(new Vector3(0, 10, 0), 30 * Time.deltaTime);
+                for (int i = 0; i < _obj.Length ; i++)
+                {
+                    if(_obj[i] != null)//如果他的值不是null就可以進去
+                    {
+                        _obj[i].Float();
+                    }
+                    
+                }
+                
+            }
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            if (CameraObj != null)
+            {
+                CameraObj.transform.Rotate(new Vector3(0, 10, 0), -30 * Time.deltaTime);
+                for (int i = 0; i < _obj.Length; i++)
+                {
+                    if (_obj[i] != null)
+                    {
+                        _obj[i].Float();
+                    }
+                }
+            }
+        }
+    }
+
+
 }

@@ -4,18 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Target
-  - Enemy
-  - Nav Mesh Source Tag
-  - TWall_Forward
-  - TWall_Back
-  - TWall_Left
-  - TWall_Right
   - Alice
-  - MoveTry
+  - TWall_Back
+  - House_Plane
   - Mushroom_Obstacle
   - Move_Obj
-  - House_Plane
   - Key
   layers:
   - Default
@@ -26,9 +19,9 @@ TagManager:
   - UI
   - 
   - 
-  - House_Plane
-  - House
-  - post process
+  - pp
+  - 
+  - 
   - 
   - 
   - 

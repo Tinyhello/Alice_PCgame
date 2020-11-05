@@ -36,23 +36,18 @@ public class Alice_Manger : MonoBehaviour
     private NavMeshAgent agent;
     private OffMeshLinkFlag flag = OffMeshLinkFlag.None;
 
-
-    private Rigidbody rg;
-    //private float anim_speed = 0;
-
     public Animator anim;
 
     private bool IsHasLinkData = false;
     private OffMeshLinkData link;
     private Vector3 center;
     private Quaternion ladderDir;
-    // Start is called before the first frame update
+   
     private Quaternion targetRot;
     
     public Animator Bridge_animator;//宣告橋的動畫
     public GameObject bridge;
 
-    private GameObject climbnodrag;
 
     private Move_stuff_01 currectLinkObj;
     public float MoveBaseVelocit = 3.5f;
@@ -62,32 +57,25 @@ public class Alice_Manger : MonoBehaviour
     public GameObject bridge02;
     public GameObject bridge03;
     public GameObject bridge04;
-    //public bridge_effect bridge_effect;
     public bridge_effect[] bridge_effects;
+    public GameObject Item;//宣告key變數
 
-    public bridge_effect bridge_Effect;
-
-
+    private bool isStop = false;
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        target = transform.position;
-        rg = GetComponent<Rigidbody>();
-        
+        target = this.transform.position;
+        isStop = false;
+
+
     }
     void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
-        targetRot = transform.rotation * Quaternion.Euler(Vector3.up * 180);
+        targetRot = this.transform.rotation * Quaternion.Euler(Vector3.up * 180);
         Bridge_control = GetComponent<Bridge_control>();
     }
-    // Update is called once per frame
-    void Update()
-    {
-        //AliceMovement();
-        //Alice_navmeshlink();
-        //transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, Time.deltaTime * 50f);//愛麗絲轉180度
-    }
+    
     public void AliceMovement()
     {
         if (Input.GetMouseButtonDown(0))
@@ -97,11 +85,6 @@ public class Alice_Manger : MonoBehaviour
             if (Physics.Raycast(r, out hit,moveMask))
             {
                 navMeshAgent.SetDestination(hit.point);
-                //anim.SetBool("walk" , true); 已用blendtree控制idle/walk動畫
-            }
-            else
-            {
-                //anim.SetBool("walk", false);已用blendtree控制idle/walk動畫
             }
         }
     }
@@ -109,9 +92,11 @@ public class Alice_Manger : MonoBehaviour
     {
         agent.Warp(pos);
     }
-    public void Alice_navmeshlink()
+    public void Alice_navmeshmove()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (isStop)
+            return;
+        if (Input.GetMouseButtonDown(0))//爬樓梯
         {
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit,moveMask))
@@ -139,11 +124,14 @@ public class Alice_Manger : MonoBehaviour
             if (agent.isOnOffMeshLink)
             {
                 //這邊叫alice不能走
-                if(!IsHasLinkData)//老師打的
+                if (!IsHasLinkData)//老師打的
                 {
-                    GameObject c_ = (agent.navMeshOwner as Component).gameObject;//這邊型轉
-                    currectLinkObj = c_.GetComponentInParent<Move_stuff_01>();
-                    currectLinkObj?.Aliceclimb(true);
+                    if (agent.navMeshOwner != null)
+                    {
+                        GameObject c_ = (agent.navMeshOwner as Component).gameObject;//這邊型轉
+                        currectLinkObj = c_.GetComponentInParent<Move_stuff_01>();
+                        currectLinkObj?.Aliceclimb(true);
+                    }
                     link = agent.currentOffMeshLinkData;
                     center = (link.startPos + link.endPos) * 0.5f;
                     if (link.startPos.y > center.y)
@@ -209,11 +197,13 @@ public class Alice_Manger : MonoBehaviour
         }
         else //idle狀態 MoveVelocit歸零
         {
+            IsHasLinkData = false;
+            anim.SetBool("climb", false);
             //MoveVelocit = 0; //愛麗絲走到目標點切回idle狀態0
             MoveVelocit = Mathf.Lerp(Mathf.Min(MoveVelocit, .5f), 0, Time.deltaTime); //距離很遠的時候+速，很近減速  跟  agent.remainingDistance 有關  ,walk狀態加速
-            agent.updateRotation = false;
-            agent.updatePosition = false;
-            //agent.speed = MoveVelocit * 3.5f; //不需要多打
+            //agent.updateRotation = false;
+            //agent.updatePosition = false;
+            agent.speed = 0;// MoveVelocit * 3.5f; //不需要多打
             SetMoveVelocity(MoveVelocit);
         }
     }
@@ -223,56 +213,28 @@ public class Alice_Manger : MonoBehaviour
         anim.SetFloat("MoveVelocity", val);
     }
 
-    //private void OnCollisionEnter(Collision item)//碰到過關道具
-    //{
-    //    if (item.gameObject.CompareTag("Key"))
-    //    {
-    //        item.gameObject.SetActive(false);
-    //        //CentralDataViewer.Item[0].SetActive(true);
-    //        //Bridge_control.bridge();
-    //        CentralDataViewer.Item[1].SetActive(true);
-            
-    //        Bridge_animator.SetBool("IsBridge", true);
-    //        bridge.transform.Translate(0, -50f, 0);
-    //    }
-    //}
-
     private void OnTriggerEnter(Collider other)
     {
         
         if (other.gameObject.CompareTag("Key"))
         {
-            Bridge_animator.SetTrigger("finish");
+            CentralDataViewer.showBridge();
             other.gameObject.SetActive(false);
-            //CentralDataViewer.Item[0].SetActive(true);
-            //Bridge_control.bridge();
-            CentralDataViewer.Item[1].SetActive(true);
-            bridge_Effect.bridgeup();
-            //Bridge_animator.SetBool("IsBridge", true);
-            //if(Bridge_animator.GetBool("IsBridge") == true)
-            //{
-            //    for(int i = 0; i < bridge_effects.Length; i++)
-            //    {
-            //        bridge_effects[i].bridgeup();
-            //    }   
-            //}
-            //bridge.transform.Translate(0, -50f, 0);
         }
     }
 
-    //public void bridgeanim()
-    //{
-        
-    //    if (!Bridge_animator.GetBool("finish"))
-    //    {
-    //        for (int i = 0; i < bridge_effects.Length; i++)
-    //        {
-    //            bridge_effects[i].bridgedown();
-    //        }
-    //    }
-    //}
-
-
+    public void StopMove()
+    {
+        IsHasLinkData = false;
+        anim.SetBool("climb", false);
+        //MoveVelocit = 0; //愛麗絲走到目標點切回idle狀態0
+        MoveVelocit = 0; //距離很遠的時候+速，很近減速  跟  agent.remainingDistance 有關  ,walk狀態加速
+        agent.updateRotation = false;
+        agent.updatePosition = false;
+        agent.speed = 0;// MoveVelocit * 3.5f; //不需要多打
+        SetMoveVelocity(MoveVelocit);
+        isStop = true;
+    }
 }
 
 
