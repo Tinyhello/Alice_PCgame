@@ -1,22 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
+using Unity.AI.Navigation;
 
+//讓NavMeshLink的起點/終點跟著指定的物件移動
 public class Nav_mesh_link : MonoBehaviour
 {
     public NavMeshLink link;
-    //public Transform pos_cur;
     public Transform pos_start;
     public Transform pos_end;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if (pos_start)
@@ -28,6 +19,5 @@ public class Nav_mesh_link : MonoBehaviour
         {
             link.endPoint = transform.InverseTransformPoint(pos_end.position);
         }
-           
     }
 }

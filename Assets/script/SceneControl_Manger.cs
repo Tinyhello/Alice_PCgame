@@ -1,61 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-
+//滑鼠與鍵盤操作：拖動機關、點兩下蘑菇障礙物、控制愛麗絲移動、旋轉鏡頭
 public class SceneControl_Manger : MonoBehaviour
 {
-    private bool part_control = true ;
-    
-    private Move_stuff_01 move_Stuff_01;
-
-    //====機關按住滑動
-    private bool mouse1 = true;//滑鼠選第一個
-    private float mouse1durtime = 0;
-    private float mouse1default = 1f;
-    
-    //====蘑菇障礙物，點擊二下
-    private bool mouse2 = false;//滑鼠點第一下
-    private bool mouse3 = false;//滑鼠點第二下
-    private float mouse2durtime = 0f;
-    private float mouse2default = 0.3f;
-    //====判斷Alice的優先程度
-    private bool alice_active1 = false;
-    private bool alice_active2 = false;
-    //====拖動變色
-    private bool colorYes = true;
     //====旋轉鏡頭
     public GameObject CameraObj;
     public Float_Obj[] _obj;
 
-    
-    private bool choose1stuff = true; 
-    RaycastHit hit;
-    RaycastHit hit_UI;
-    private bool ray_UI = false;
-    private bool ray_game = false;
-
     public LayerMask mask = 1 << 8; //打開第8層
 
     public GameObject mushroom_obstacle;
-    private Obstacle a;
     public Alice_Manger alice_manger;
 
-    //public Renderer HouseRenderer;換材質註解
-    //public Material[] HouseMaterials;換材質註解
-
-    private GameObject alice;
-    private click_effect click;
     public House_Plane house_plane;
-    // Start is called before the first frame update
-    void Start()
-    {
-        mouse1durtime = mouse1default;
-        //HouseRenderer.material = GetComponent<Renderer>().material; 換材質註解
-    }
 
-    // Update is called once per frame
+    private const float HoldTime = 1f;//機關要按住多久才能拖動
+    private const float DoubleClickTime = 0.3f;//蘑菇兩次點擊的間隔上限
+    private const float CameraTurnSpeed = 30f;
+
+    //====機關按住滑動
+    private Move_stuff_01 move_Stuff_01;
+    private click_effect click;
+    private bool isDragging = false;
+    private float holdTimer = HoldTime;
+    private GameObject pressedHandle;//按下滑鼠時選到的機關，放開前都不會變
+    private bool pressedOnWalkable = false;//按下的位置是機關上可以走的部分（例如柱頂）
+    private Vector3 pressedPoint;
+
+    //====蘑菇障礙物，點擊二下
+    private bool firstClick = false;//滑鼠點第一下
+    private bool secondClick = false;//滑鼠點第二下
+    private float doubleClickTimer = 0f;
+
+    //====判斷Alice的優先程度，兩個都是true才能控制愛麗絲
+    private bool alice_active1 = false;//滑鼠沒有按在機關上
+    private bool alice_active2 = false;//滑鼠沒有點在蘑菇上
+
     void Update()
     {
         if (EventSystem.current.IsPointerOverGameObject()) return; //如果點到UI就跳出不執行後面的Raycast
@@ -70,168 +51,200 @@ public class SceneControl_Manger : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             Ray r = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(r, out hit))   //,500f, mask  ,LayerMask.GetMask("Player")
+            bool isHit = Physics.Raycast(r, out RaycastHit hit);
+
+            if (Input.GetMouseButtonDown(0))
             {
-                //Debug.DrawLine(Camera.main.transform.position, hit.point, Color.red);
-                //Debug.Log(hit.collider.gameObject.name);
-                //if (hit.collider.gameObject.CompareTag("House_Plane"))  射線射到房子地板會替換房子的材質
-                //{
-                //    HouseRenderer.material = HouseMaterials[1];
-                //}
+                //按下的那一刻決定選到哪個機關，之後滑鼠滑開也算按住同一個
+                pressedHandle = isHit ? FindHandle(hit) : null;
+                pressedOnWalkable = isHit && !hit.transform.CompareTag("Move_Obj");
+                pressedPoint = hit.point;
+            }
 
+            if (pressedHandle != null)
+            {
+                alice_active1 = false;//停止控制Alice
+                HoldMoveObj(pressedHandle);
+                return;
+            }
 
+            if (!isHit)
+                return;
 
-                if (hit.transform.CompareTag("Move_Obj"))
+            if (hit.transform.CompareTag("Move_Obj"))
+            {
+                alice_active1 = false;
+            }
+            else if (Input.GetMouseButtonDown(0))
+            {
+                if (hit.transform.CompareTag("Mushroom_Obstacle"))//蘑菇障礙物
                 {
-                    alice_active1 = false;
-                    mouse1durtime -= Time.deltaTime;
-                    
-
-
-
-                    if (mouse1durtime < 0)//這邊判斷要按住才算
-                    {
-                        if (mouse1 == true && colorYes == true)
-                        {
-                            //Debug.Log("d");
-                            MoveTarget mvTarget = hit.transform.GetComponent<MoveTarget>();
-                            if (mvTarget != null)
-                            {
-                                click = hit.transform.GetComponent<click_effect>();//
-                                move_Stuff_01 = mvTarget.MoveObj.GetComponent<Move_stuff_01>();
-                                move_Stuff_01.Move_stuff(hit.transform.gameObject);
-                                mouse1 = false;
-
-                                if (click != null)
-                                {
-                                    click.clickdown();
-                                }
-                                colorYes = false;
-
-
-
-                            }
-                        }
-                    }
-                    //停止控制Alice. 
-                    //存滑鼠點到的物件
+                    alice_active2 = false;
+                    ClickMushroom(hit.transform.gameObject);
                 }
-                else if (Input.GetMouseButtonDown(0))
-                {
-                    if (hit.transform.CompareTag("Mushroom_Obstacle"))//蘑菇障礙物
-                    {
-                        alice_active2 = false;
-                        if (!mouse2) //if括號裡面的東西是運算子(包含!)，然後if判斷裡面的運算子算完後，是true才能進去，是false就不能進去
-                        {
-                            mouse2 = true;//這邊的mouse2 = ture跟上面的ture計算無關
-                            mouse3 = false;
-                            mouse2durtime = mouse2default;
-                        }
-                        else if (mouse2durtime > 0)
-                        {
-                            mouse3 = true;
-                        }
-                        if (mouse2durtime > 0 && mouse2 == true && mouse3 == true)//限制條件
-                        {
-                            a = hit.transform.gameObject.GetComponent<Obstacle>();
-                            if (a != null)
-                            {
-                                mushroom_obstacle = hit.transform.gameObject;//射線打到磨菇要用變數存起來
-                                a.obstacleOff();
-                                
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    alice_active1 = true;
-                    alice_active2 = true;
-                }
+            }
+            else
+            {
+                alice_active1 = true;
+                alice_active2 = true;
             }
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0) || pressedHandle != null || isDragging)//在UI上放開時收不到MouseUp，所以沒按著也要放開
         {
-            if (house_plane.aaa == null)//alic在房子裡
+            ReleaseMoveObj();
+        }
+    }
+
+    //找出射線打到的物件屬於哪個機關：打到機關本身(Move_Obj)，或機關底下其他的實體碰撞體(例如柱頂)都算
+    private GameObject FindHandle(RaycastHit hit)
+    {
+        if (hit.transform.CompareTag("Move_Obj"))
+            return hit.transform.gameObject;
+
+        if (hit.collider.isTrigger)//trigger是蘑菇、房子地板等其他用途，不算機關
+            return null;
+
+        Move_stuff_01 mechanism = hit.transform.GetComponentInParent<Move_stuff_01>();
+        if (mechanism == null)
+            return null;
+
+        foreach (MoveTarget target in mechanism.GetComponentsInChildren<MoveTarget>())
+        {
+            if (target.MoveObj == mechanism.gameObject)
+                return target.gameObject;
+        }
+        return null;
+    }
+
+    //機關要按住一段時間才會開始拖動
+    private void HoldMoveObj(GameObject target)
+    {
+        holdTimer -= Time.deltaTime;
+        if (holdTimer >= 0 || isDragging)
+            return;
+
+        MoveTarget mvTarget = target.GetComponent<MoveTarget>();
+        if (mvTarget == null)
+            return;
+
+        click = target.GetComponent<click_effect>();
+        move_Stuff_01 = mvTarget.MoveObj.GetComponent<Move_stuff_01>();
+        move_Stuff_01.Move_stuff(target);//存滑鼠點到的物件
+        isDragging = true;
+
+        if (click != null)
+        {
+            click.clickdown();
+        }
+    }
+
+    private void ReleaseMoveObj()
+    {
+        //在機關可以走的部分短按（還沒按到開始拖動）就當成叫愛麗絲走過去
+        if (pressedHandle != null && pressedOnWalkable && !isDragging)
+        {
+            GameObject alice = GameObject.FindWithTag("Alice");
+            if (alice != null)
             {
-                if (move_Stuff_01)
-                {
-                    Debug.Log("變色!");
-                    move_Stuff_01.Move_stuff(null);//機關儲存的value要切成null
-                    mouse1durtime = mouse1default;//滑鼠只要離開機關計時器就要回默認值
-                    mouse1 = true;//滑鼠放開機關就不能動了
-                    click.clickup();
-                    colorYes = true;
-                    
-                }
+                alice.GetComponent<Alice_Manger>().MoveTo(pressedPoint);
             }
+        }
 
+        pressedHandle = null;
+        holdTimer = HoldTime;//滑鼠放開計時器就要回默認值
+        alice_active1 = true;//放開機關後恢復控制Alice
 
-            
-            
+        if (move_Stuff_01)
+        {
+            move_Stuff_01.Move_stuff(null);//機關儲存的value要切成null
+            isDragging = false;//滑鼠放開機關就不能動了
+
+            //愛麗絲在房子裡時房子要維持透明材質，不能被放開的材質蓋掉
+            bool keepHouseMaterial = house_plane.IsAliceInside && click != null && click.houserenderer == house_plane.HouseRenderer;
+            if (click != null && !keepHouseMaterial)
+            {
+                click.clickup();
+            }
+        }
+    }
+
+    //蘑菇要在時間內點兩下才會移開
+    private void ClickMushroom(GameObject target)
+    {
+        if (!firstClick)
+        {
+            firstClick = true;
+            secondClick = false;
+            doubleClickTimer = DoubleClickTime;
+        }
+        else if (doubleClickTimer > 0)
+        {
+            secondClick = true;
+        }
+
+        if (doubleClickTimer > 0 && firstClick && secondClick)
+        {
+            Obstacle obstacle = target.GetComponent<Obstacle>();
+            if (obstacle != null)
+            {
+                mushroom_obstacle = target;//射線打到磨菇要用變數存起來
+                obstacle.obstacleOff();
+            }
         }
     }
 
     public void Alicecontrol()
     {
-        if(alice_active1 ==true && alice_active2 == true)
+        if (alice_active1 && alice_active2)
         {
-            alice = GameObject.FindWithTag("Alice");
-            if(alice != null)
+            GameObject alice = GameObject.FindWithTag("Alice");
+            if (alice != null)
             {
                 alice.GetComponent<Alice_Manger>().Alice_navmeshmove();
             }
         }
     }
-   
+
+    //第一下點擊後開始倒數，時間到沒有點第二下就重來
     public void mushroom_obstacle_tmiecontrol()
     {
-        if (mouse2 == true && mouse3==false)
+        if (firstClick && !secondClick)
         {
-            mouse2durtime -= Time.deltaTime;
-            if (mouse2durtime <= 0)
+            doubleClickTimer -= Time.deltaTime;
+            if (doubleClickTimer <= 0)
             {
-                mouse2 = false;
-                mouse3 = false;
+                firstClick = false;
+                secondClick = false;
             }
         }
-        
     }
 
     public void Cameraturn()
     {
         if (Input.GetKey(KeyCode.A))
         {
-            if (CameraObj != null)
-            {
-                CameraObj.transform.Rotate(new Vector3(0, 10, 0), 30 * Time.deltaTime);
-                for (int i = 0; i < _obj.Length ; i++)
-                {
-                    if(_obj[i] != null)//如果他的值不是null就可以進去
-                    {
-                        _obj[i].Float();
-                    }
-                    
-                }
-                
-            }
+            TurnCamera(CameraTurnSpeed);
         }
 
         if (Input.GetKey(KeyCode.D))
         {
-            if (CameraObj != null)
-            {
-                CameraObj.transform.Rotate(new Vector3(0, 10, 0), -30 * Time.deltaTime);
-                for (int i = 0; i < _obj.Length; i++)
-                {
-                    if (_obj[i] != null)
-                    {
-                        _obj[i].Float();
-                    }
-                }
-            }
+            TurnCamera(-CameraTurnSpeed);
         }
     }
 
+    //旋轉鏡頭時漂浮物會跟著上下飄
+    private void TurnCamera(float speed)
+    {
+        if (CameraObj == null)
+            return;
 
+        CameraObj.transform.Rotate(new Vector3(0, 10, 0), speed * Time.deltaTime);
+        for (int i = 0; i < _obj.Length; i++)
+        {
+            if (_obj[i] != null)
+            {
+                _obj[i].Float();
+            }
+        }
+    }
 }
