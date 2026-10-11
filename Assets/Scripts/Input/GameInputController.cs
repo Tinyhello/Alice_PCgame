@@ -31,13 +31,14 @@ public class GameInputController : MonoBehaviour
     void Update()
     {
         bool isOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+        bool isLocked = CubeWorld.IsRotating;//正方體旋轉中不能操作，正在拖的機關也會放開
 
-        if (GameInput.PointerDown && !isOverUI)//點到UI就不處理
+        if (GameInput.PointerDown && !isOverUI && !isLocked)//點到UI就不處理
         {
             OnPointerDown();
         }
 
-        if (GameInput.PointerHeld)
+        if (GameInput.PointerHeld && !isLocked)
         {
             if (pressedHandle != null)
             {

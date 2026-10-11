@@ -8,7 +8,8 @@ public class MovableMechanism : MonoBehaviour
     [FormerlySerializedAs("limithigh")] public float maxHeight = 3;//可移動距離
     public float dragSensitivity = 1f;//1代表機關在畫面上跟著滑鼠移動一樣的距離
 
-    private Vector3 startPosition;
+    private Vector3 startLocalPosition;//用local座標記，機關所在的面轉動後才不會跑掉
+    private float height;//目前沿著自己的Y軸拉了多遠
     private bool isDragged;
     private bool isAliceClimbing;
 
@@ -17,9 +18,9 @@ public class MovableMechanism : MonoBehaviour
 
     private void Start()
     {
-        startPosition = transform.position;
+        startLocalPosition = transform.localPosition;
         surfaces = GetComponentsInChildren<NavMeshSurface>();
-        navMeshSyncedPosition = startPosition;
+        navMeshSyncedPosition = transform.position;
     }
 
     private void Update()
@@ -49,18 +50,29 @@ public class MovableMechanism : MonoBehaviour
         if (isAliceClimbing || !isDragged)
             return;
 
-        if (Vector3.Distance(startPosition, transform.position) < maxHeight)
+        if (height < maxHeight)
         {
-            transform.Translate(0, PointerMovementAlongUp(), 0);
+            height += PointerMovementAlongUp();
         }
-        if (Vector3.Distance(startPosition, transform.position) >= maxHeight)//拉到最高就鎖定在最高的位置
+        if (height >= maxHeight)//拉到最高就鎖定在最高的位置
         {
-            transform.position = startPosition + maxHeight * Vector3.up;
+            height = maxHeight;
         }
-        if (startPosition.y > transform.position.y)//不讓機關低於原本位置
+        if (height < 0)//不讓機關低於原本位置
         {
-            transform.position = startPosition;
+            height = 0;
         }
+        ApplyHeight();
+    }
+
+    private void ApplyHeight()
+    {
+        Vector3 offset = transform.up * height;
+        if (transform.parent != null)
+        {
+            offset = transform.parent.InverseTransformVector(offset);
+        }
+        transform.localPosition = startLocalPosition + offset;
     }
 
     //把滑鼠這一幀的位移換算成機關沿著自己Y軸要移動的距離，讓機關在畫面上跟著滑鼠走
@@ -87,6 +99,9 @@ public class MovableMechanism : MonoBehaviour
         navMeshSyncedPosition = transform.position;
         foreach (NavMeshSurface surface in surfaces)
         {
+            if (!surface.isActiveAndEnabled)//所在的面沒有朝上時NavMesh是卸掉的
+                continue;
+
             surface.RemoveData();
             surface.AddData();
         }
@@ -95,7 +110,8 @@ public class MovableMechanism : MonoBehaviour
     //回到初始位置，並重新開啓機關與第一個子物件
     public void ResetMechanism()
     {
-        transform.position = startPosition;
+        height = 0;
+        transform.localPosition = startLocalPosition;
         gameObject.SetActive(true);
         transform.GetChild(0).gameObject.SetActive(true);
     }

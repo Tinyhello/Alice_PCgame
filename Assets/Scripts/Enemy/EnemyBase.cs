@@ -135,6 +135,12 @@ public abstract class EnemyBase : MonoBehaviour
         {
             agent = GetComponent<NavMeshAgent>();
         }
+
+        if (!agent.enabled)//所在的面沒有朝上時agent是關的，直接搬物件
+        {
+            transform.position = point1.transform.position;
+            return;
+        }
         agent.Warp(point1.transform.position);
     }
 }

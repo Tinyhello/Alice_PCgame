@@ -27,6 +27,8 @@ public class AliceController : MonoBehaviour
     }
 
     private NavMeshAgent agent;
+    private Rigidbody body;
+    private bool wasKinematic;
     private float moveVelocity;//0~1，目前走路速度的比例
     private bool isStopped;
 
@@ -39,6 +41,7 @@ public class AliceController : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        body = GetComponent<Rigidbody>();
     }
 
     private void OnEnable()
@@ -89,7 +92,7 @@ public class AliceController : MonoBehaviour
     //設定目標後agent就會自己移動
     public void MoveTo(Vector3 point)
     {
-        if (isStopped)
+        if (isStopped || !agent.isOnNavMesh)
             return;
 
         agent.SetDestination(new Vector3(point.x, transform.position.y, point.z));
@@ -181,6 +184,34 @@ public class AliceController : MonoBehaviour
             gameManager.ShowBridge();
             other.gameObject.SetActive(false);
         }
+    }
+
+    //正方體換面時離開NavMesh，位置交給CubeWorld控制
+    public void DetachFromNavMesh()
+    {
+        agent.enabled = false;
+        if (body != null)
+        {
+            wasKinematic = body.isKinematic;
+            body.isKinematic = true;//agent關掉後剛體會被重力拉走
+        }
+    }
+
+    //換面結束，在目前的位置重新接上NavMesh
+    public void AttachToNavMesh()
+    {
+        if (body != null)
+        {
+            body.isKinematic = wasKinematic;
+        }
+
+        agent.enabled = true;
+        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 3f, NavMesh.AllAreas))
+        {
+            agent.Warp(hit.position);
+        }
+        hasLinkData = false;
+        ladderState = LadderState.None;
     }
 
     //過關後停在原地

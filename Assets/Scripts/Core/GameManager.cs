@@ -65,6 +65,11 @@ public class GameManager : MonoBehaviour
 
         if (!isAliceAlive)
         {
+            if (CubeWorld.Current != null)
+            {
+                CubeWorld.Current.ResetToStartFace();//重生點在起始面上
+            }
+
             GameObject alice = Instantiate(alicePrefab, respawnPoint.position, respawnPoint.rotation, respawnPoint);
             currentAlice = alice.GetComponent<AliceController>();
             currentAlice.gameManager = this;//prefab存不了場景物件的參照，生成後要自己給
