@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class CentralDataViewer : MonoBehaviour
 {
@@ -10,8 +7,7 @@ public class CentralDataViewer : MonoBehaviour
     public Transform RebirthPos;//重生愛麗絲的座標
     public bool Player_isDead = false;//判斷愛麗絲死亡狀態
     public bool Player_isBorn = false;//判斷愛麗絲重生
-    public int PlayerAlive = 1;//宣告靜態變數 愛麗絲數量
-    private float WaitRebirthtime = 2f;//愛麗絲死亡重生等待時間
+    public int PlayerAlive = 1;//愛麗絲數量
 
     public GameObject[] Item;
     public Enemy_Manger EnemyCS;//敵人cs
@@ -29,12 +25,17 @@ public class CentralDataViewer : MonoBehaviour
     public Animator Bridge_animator;//宣告橋的動畫
     public Alice_Manger Alice_Manger;//宣告愛麗絲cs
     public bridge_effect bridge_Effect;
+
+    private const float RebirthWaitTime = 2f;//愛麗絲死亡重生等待時間
+    private const float DeadDestroyDelay = 2f;//愛麗絲死亡後幾秒消滅物件
+
+    private float WaitRebirthtime = RebirthWaitTime;
+
     private void Start()
     {
         Particle.Stop();
-        if(StartPlayerObj != null)
+        if (StartPlayerObj != null)
             Alice_Manger = StartPlayerObj.GetComponent<Alice_Manger>();
-
     }
 
     void Update()
@@ -44,43 +45,45 @@ public class CentralDataViewer : MonoBehaviour
             PnlPlayerDead.SetActive(true);//愛麗絲死亡執行愛麗絲重新開始畫面
         }
 
-        if (Player_isBorn == true)
+        if (Player_isBorn)
         {
-            PnlPlayerDead.SetActive(false);//關愛麗絲重新開始畫面
-            EnemyCS.EnemyPosReset();//叫小兵執行reset座標
-            EnemyCS2.EnemyPosReset();//叫小兵2執行reset座標
-            if (WaitRebirthtime > 0) //等待時間>0就等待時間-每禎的平均時間
-            {
-                WaitRebirthtime -= Time.deltaTime;//等待時間-1
-                if (WaitRebirthtime <= 0f)
-                {
-                    if (PlayerAlive > -1 && PlayerAlive < 1)
-                    {
-                        PnlPlayerDead.SetActive(false);//關愛麗絲重新開始畫面
-                        GameObject RebirthObj = Instantiate(RebirthPlayerObj, RebirthPos.position, RebirthPos.rotation, RebirthPos);//重生愛麗絲的座標
-                        //RebirthObj.transform.localScale = new Vector3(1, 1, 1);//設定愛麗絲原本尺寸
-                        //RebirthObj.transform.parent = Ground.transform;//重生愛麗絲在父物件節點下
-                        PlayerAlive++;//愛麗絲計數++
-                        Player_isBorn = false;//愛麗絲已重生 狀態關
-                        Alice_Manger = RebirthObj.GetComponent<Alice_Manger>();
-                        Alice_Manger.CentralDataViewer = this;//新生成愛麗絲Alice_Manger.cs把CentralDataViewer.cs給新生成愛麗絲用 非常重要非常重要
-
-                    }
-                    Player_isDead = false;//重設愛麗絲死亡狀態 
-                    WaitRebirthtime = 2f;//重設死亡等待時間
-                    for (int i = 0; i < 3; i++)
-                    {
-                        Move_stuff_01_cs[i].Reset_MoveElement();//呼叫機關cs.的重置機關x3個
-                        bridge_.Bridge_reset();
-                    }
-
-                }
-           
-            }
+            UpdateRebirth();
         }
         Button();
     }
 
+    private void UpdateRebirth()
+    {
+        PnlPlayerDead.SetActive(false);//關愛麗絲重新開始畫面
+        EnemyCS.EnemyPosReset();//叫小兵執行reset座標
+        EnemyCS2.EnemyPosReset();//叫小兵2執行reset座標
+
+        if (WaitRebirthtime <= 0)
+            return;
+
+        WaitRebirthtime -= Time.deltaTime;
+        if (WaitRebirthtime > 0f)
+            return;
+
+        if (PlayerAlive == 0)
+        {
+            GameObject RebirthObj = Instantiate(RebirthPlayerObj, RebirthPos.position, RebirthPos.rotation, RebirthPos);//重生愛麗絲的座標
+            PlayerAlive++;//愛麗絲計數++
+            Player_isBorn = false;//愛麗絲已重生 狀態關
+            Alice_Manger = RebirthObj.GetComponent<Alice_Manger>();
+            Alice_Manger.CentralDataViewer = this;//新生成愛麗絲Alice_Manger.cs把CentralDataViewer.cs給新生成愛麗絲用 非常重要非常重要
+        }
+        Player_isDead = false;//重設愛麗絲死亡狀態
+        WaitRebirthtime = RebirthWaitTime;//重設死亡等待時間
+
+        for (int i = 0; i < Move_stuff_01_cs.Length; i++)
+        {
+            Move_stuff_01_cs[i].Reset_MoveElement();//呼叫機關cs.的重置機關
+        }
+        bridge_.Bridge_reset();
+    }
+
+    //測試用快捷鍵
     public void Button()
     {
         if (Input.GetKeyDown(KeyCode.P))
@@ -95,56 +98,63 @@ public class CentralDataViewer : MonoBehaviour
         {
             GameStart();
         }
-
-
-
-
     }
 
     public void GameOver()
     {
-        restartbridge();
-        Debug.Log("GameOver嘿嘿嘿嘿嘿嘿嘿嘿");
-        if (PlayerAlive == 1)
-        {
-            Player_isBorn = false;
-            Player_isDead = true;
+        KillAlice(Alice_Manger.gameObject);
+    }
 
-            Alice_Manger.gameObject.SetActive(false);//停用愛麗絲
-            Destroy(Alice_Manger.gameObject, 2f);//2秒後消滅愛麗絲 
-            PlayerAlive--;//愛麗絲計數--
+    //愛麗絲死亡：重設橋與過關道具，並顯示重新開始畫面
+    public void KillAlice(GameObject alice)
+    {
+        restartbridge();
+        if (RemoveAlice(alice, DeadDestroyDelay))
+        {
+            Player_isDead = true;
         }
+    }
+
+    //停用並消滅場上的愛麗絲，有成功移除才回傳true
+    public bool RemoveAlice(GameObject alice, float destroyDelay)
+    {
+        if (PlayerAlive != 1)
+            return false;
+
+        Player_isBorn = false;
+        alice.SetActive(false);//停用愛麗絲
+        Destroy(alice, destroyDelay);
+        PlayerAlive--;//愛麗絲計數--
+        return true;
     }
 
     public void showBridge()
     {
         Bridge_animator.SetTrigger("finish");
         bridge_Effect.bridgeup();
-
     }
-
-
-
 
     public void Reborn()//玩家重生方法-按鈕呼叫
     {
         Player_isBorn = true;//玩家重生狀態開
         Particle.Play();//按下重新挑戰就播放重生動畫
     }
-    public void ClearReStart()//遊戲重新開始
+
+    public void ClearReStart()//遊戲重新開始-按鈕呼叫
     {
-        Player_isBorn = true;//玩家重生狀態開
-        Particle.Play();//按下重新挑戰就播放重生動畫
+        Reborn();
     }
+
     public void GameStart()
     {
         Particle.Play();//按下遊戲開始就播放重生動畫
         Alice_Manger.gameObject.SetActive(true);//愛麗絲開啓
-        for (int i = 0; i < 2; i++)//小兵'們'開啓
+        for (int i = 0; i < StartEnemyObjs.Length; i++)//小兵'們'開啓
         {
             StartEnemyObjs[i].SetActive(true);
         }
     }
+
     public void restartbridge()
     {
         Bridge_animator.SetBool("IsBridge", false);//重設橋動畫
@@ -155,6 +165,4 @@ public class CentralDataViewer : MonoBehaviour
     {
         Alice_Manger.StopMove();
     }
-
-
 }

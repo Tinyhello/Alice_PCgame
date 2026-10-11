@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+//拿到鑰匙後橋的發光特效，播完才升起橋
 public class bridge_effect : MonoBehaviour
 {
     public Renderer houserenderer;
@@ -22,9 +21,8 @@ public class bridge_effect : MonoBehaviour
 
     public void bridgeup()
     {
-        //houserenderer.material = housematerials[0];
         offset = -10;
-        houserenderer.sharedMaterial.SetColor("_EmissionColor", HighlightColor * Mathf.Pow(2, offset));
+        SetEmission();
         isDisplay = true;
         time = 0;
         particle_bridge.SetActive(true);
@@ -35,40 +33,25 @@ public class bridge_effect : MonoBehaviour
         particle_bridge.SetActive(false);
     }
 
-
-    public void bridgeOff()
-    {
-        //houserenderer.material = housematerials[1];
-    }
-    
-    // Update is called once per frame
     void Update()
     {
-        
         if (isDisplay)
         {
             time += Time.deltaTime;
-            offset = curve.Evaluate(time/showtime);
-            houserenderer.sharedMaterial.SetColor("_EmissionColor", HighlightColor * Mathf.Pow(2, offset));
-            
-
+            offset = curve.Evaluate(time / showtime);
+            SetEmission();
 
             if (time >= showtime)
             {
                 isDisplay = false;
                 Bridge_animator.SetBool("IsBridge", true);
-                if (Bridge_animator.GetBool("IsBridge") == true)
-                {
-                    for (int i = 0; i < bridge_effects.Length; i++)
-                    {
-                        //bridge_effects[i].
-
-                    }
-                }
-            }            
+            }
             obstacle_bridge.transform.Translate(0, -20f, 0);
         }
     }
 
-    
+    private void SetEmission()
+    {
+        houserenderer.sharedMaterial.SetColor("_EmissionColor", HighlightColor * Mathf.Pow(2, offset));
+    }
 }

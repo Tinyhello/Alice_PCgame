@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+//機關被按住/放開時切換材質
 public class click_effect : MonoBehaviour
 {
     public Renderer houserenderer;
@@ -15,19 +14,5 @@ public class click_effect : MonoBehaviour
     public void clickup()
     {
         houserenderer.material = housematerials[3];
-    }
-
-
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

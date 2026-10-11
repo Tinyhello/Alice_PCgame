@@ -1,5 +1,3 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Game_Plane_Exit : MonoBehaviour
@@ -9,79 +7,45 @@ public class Game_Plane_Exit : MonoBehaviour
     public GameObject TargetPlayerObj;
     public ParticleSystem Particle;
 
-    public float settime = 3f; 
+    public float settime = 3f;//特效播放幾秒後讓愛麗絲消失
     private float _time = 0f;
-    
-    private bool die =false ;
-    private bool diee = false;
 
-
-    void Start()
-    {
-
-    }
+    private bool die = false;
 
     void Update()
     {
         delete();
-
-
-
     }
 
     private void delete()
     {
-        if(die == true)
+        if (!die)
+            return;
+
+        _time -= Time.deltaTime;
+
+        if (_time <= 0)
         {
-
-            _time -= Time.deltaTime;
-
-            if (_time <= 0)
-            {
-                //Debug.Log(_time);
-                pnlClear.SetActive(true);
-                Particle.gameObject.SetActive(false);
-                die = false;
-            }
-            else if(_time <= Particle.main.startLifetimeMultiplier - settime)
-            { 
-                if (CentralDataViewer.PlayerAlive == 1)
-                {
-                    CentralDataViewer.Player_isBorn = false;
-
-                    TargetPlayerObj.gameObject.SetActive(false);//停用愛麗絲
-                    Destroy(TargetPlayerObj.gameObject/*, 2f*/);//2秒後消滅愛麗絲 
-                    CentralDataViewer.PlayerAlive--;//愛麗絲計數--
-                }
-            }
+            pnlClear.SetActive(true);
+            Particle.gameObject.SetActive(false);
+            die = false;
         }
-        
-        
+        else if (_time <= Particle.main.startLifetimeMultiplier - settime)
+        {
+            CentralDataViewer.RemoveAlice(TargetPlayerObj, 0f);
+        }
     }
-
-
-
-
 
     void OnTriggerEnter(Collider TargetObj)
     {
-        TargetPlayerObj = TargetObj.gameObject;
         if (TargetObj.gameObject.CompareTag("Alice"))
         {
+            TargetPlayerObj = TargetObj.gameObject;
             Particle.gameObject.SetActive(true);
             _time = Particle.main.startLifetimeMultiplier;
-            //Debug.Log("OnTriggerEnter:"+_time);
             die = true;
             delete();
             CentralDataViewer.GameFinish();
-
-
-
-
-
-
-
         }
     }
-
 }
