@@ -82,11 +82,14 @@ public class CubeWorld : MonoBehaviour
         Quaternion toRotation = Quaternion.Inverse(transform.rotation) * to.arrivalPoint.rotation;
         Vector3 fromUp = transform.InverseTransformDirection(fromFace.transform.up);
         Vector3 toUp = transform.InverseTransformDirection(toFace.transform.up);
+        //沿著邊界的方向對齊，從邊界的哪裡走出去就從對面的同一個位置進來
+        Vector3 edgeDirection = Vector3.Cross(fromUp, toUp);
+        toPosition += edgeDirection * Vector3.Dot(fromPosition - toPosition, edgeDirection);
         Vector3 edgePoint = fromPosition + toUp * Vector3.Dot(toPosition - fromPosition, toUp);
         Vector3 corner = edgePoint + (fromUp + toUp) * CornerLift;
 
         Quaternion fromCube = transform.rotation;
-        Quaternion toCube = Quaternion.FromToRotation(toFace.transform.up, Vector3.up) * fromCube;
+        Quaternion toCube = SnapToRightAngles(Quaternion.FromToRotation(toFace.transform.up, Vector3.up) * fromCube);
 
         for (float time = 0; time < rotateDuration; time += Time.deltaTime)
         {
@@ -109,7 +112,7 @@ public class CubeWorld : MonoBehaviour
         if (alice != null)
         {
             aliceTransform.SetParent(toFace.transform, true);
-            aliceTransform.SetPositionAndRotation(to.arrivalPoint.position, to.arrivalPoint.rotation);
+            aliceTransform.SetPositionAndRotation(transform.TransformPoint(toPosition), to.arrivalPoint.rotation);
             if (alice.isActiveAndEnabled)//旋轉途中死掉就不用接回NavMesh
             {
                 alice.AttachToNavMesh();
@@ -118,6 +121,26 @@ public class CubeWorld : MonoBehaviour
 
         edgeReadyTime = Time.time + EdgeCooldown;
         isRotating = false;
+    }
+
+    //正方體只會停在90度的倍數上，每次轉完對齊一次，轉很多次也不會累積誤差
+    private Quaternion SnapToRightAngles(Quaternion rotation)
+    {
+        Quaternion relative = rotation * Quaternion.Inverse(startRotation);
+        Quaternion snapped = Quaternion.LookRotation(NearestAxis(relative * Vector3.forward), NearestAxis(relative * Vector3.up));
+        return snapped * startRotation;
+    }
+
+    private static Vector3 NearestAxis(Vector3 direction)
+    {
+        float x = Mathf.Abs(direction.x);
+        float y = Mathf.Abs(direction.y);
+        float z = Mathf.Abs(direction.z);
+        if (x >= y && x >= z)
+            return new Vector3(Mathf.Sign(direction.x), 0, 0);
+        if (y >= z)
+            return new Vector3(0, Mathf.Sign(direction.y), 0);
+        return new Vector3(0, 0, Mathf.Sign(direction.z));
     }
 
     //重生時直接轉回起始面，不播旋轉過程
